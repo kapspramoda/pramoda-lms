@@ -75,6 +75,23 @@ export default function SimulationPage() {
       url: 'https://phet.colorado.edu/sims/html/isotopes-and-atomic-mass/latest/isotopes-and-atomic-mass_en.html', 
       icon: '📊',
       color: 'bg-teal-50 border-teal-200 text-teal-700'
+    },
+    // අලුතින් එකතු කළ Simulation දෙක පහතින් ඇත
+    { 
+      id: 9, 
+      title: 'රදර්ෆර්ඩ් පරීක්ෂණය', 
+      description: 'ඇල්ෆා අංශු රන් පත්‍රයක ගැටී විසිරෙන ආකාරය සහ න්‍යෂ්ටියේ ස්වභාවය.',
+      url: 'https://phet.colorado.edu/sims/html/rutherford-scattering/latest/rutherford-scattering_en.html', 
+      icon: '🎯',
+      color: 'bg-rose-50 border-rose-200 text-rose-700'
+    },
+    { 
+      id: 10, 
+      title: 'අණුක හැඩ (VSEPR)', 
+      description: 'VSEPR වාදය අනුව අණු වල ත්‍රිමාන හැඩය සහ බන්ධන කෝණ.',
+      url: 'https://phet.colorado.edu/sims/html/molecule-shapes/latest/molecule-shapes_en.html', 
+      icon: '💠',
+      color: 'bg-emerald-50 border-emerald-200 text-emerald-700'
     }
   ];
 
