@@ -3,7 +3,7 @@ import connectToDatabase from '@/lib/mongodb';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-// User Model (center කොටස ඇතුළත් කර ඇත)
+// User Model (අලුත් center එකත් එක්ක)
 const UserSchema = new mongoose.Schema({
   name: String,
   username: { type: String, unique: true },
@@ -31,9 +31,9 @@ export async function POST(req) {
 
     let isPasswordMatch = false;
     if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$')) {
-      isMatch = await bcrypt.compare(password, user.password);
+      isPasswordMatch = await bcrypt.compare(password, user.password);
     } else {
-      isMatch = (user.password === password);
+      isPasswordMatch = (user.password === password);
     }
 
     if (!isPasswordMatch) {
@@ -43,11 +43,20 @@ export async function POST(req) {
       );
     }
 
-    // මෙතන අලුතින් center: user.center එකතු කර ඇත
+    // මෙන්න මේ කොටස තමයි අපි අලුතින් හැදුවේ (alYear සහ center යැවීම)
     return NextResponse.json(
-        { message: 'සාර්ථකයි', user: { name: user.name, username: user.username, alYear: user.alYear, center: user.center } }, 
-        { status: 200 }
-      );
+      { 
+        message: 'සාර්ථකයි', 
+        user: { 
+          name: user.name, 
+          username: user.username, 
+          email: user.email,
+          alYear: user.alYear, // Batch එක යවයි
+          center: user.center  // Center එක යවයි
+        } 
+      }, 
+      { status: 200 }
+    );
 
   } catch (error) {
     console.error("Login Error:", error);
