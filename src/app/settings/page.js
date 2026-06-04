@@ -102,7 +102,6 @@ export default function SettingsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          // මෙන්න මේ පේළිය තමයි නිවැරදිව වෙනස් කළේ
           username: user.username, 
           currentPassword: passwords.current,
           newPassword: passwords.new,
@@ -122,8 +121,6 @@ export default function SettingsPage() {
       setLoading(false);
     }
   };
-
-  if (!user) return <div className="min-h-screen bg-gray-50 flex items-center justify-center font-bold text-blue-600">පරීක්ෂා කරමින් පවතී...</div>;
 
   return (
     <div className="bg-gray-50 font-sans text-gray-800 flex h-screen overflow-hidden">
@@ -156,7 +153,6 @@ export default function SettingsPage() {
             <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
           </a>
           
-          {/* අලුතින් එකතු කළ දැනුම්දීම් සහ සැකසුම් */}
           <div className="pt-4 border-t border-blue-800/50 mt-4 mb-2"></div>
 
           <a href="#" onClick={(e) => { e.preventDefault(); router.push('/notifications'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
@@ -222,7 +218,7 @@ export default function SettingsPage() {
 
               <div className="text-center sm:text-left mt-2 sm:mt-0">
                 <h2 className="text-3xl font-bold">{user.name}</h2>
-                <p className="text-blue-100 mt-1 text-lg">{user.username}</p> {/* ඊමේල් වෙනුවට නම්බර් එක පෙන්වීමට වෙනස් කළා */}
+                <p className="text-blue-100 mt-1 text-lg">{user.username}</p> 
                 <span className="inline-block mt-3 bg-white text-blue-700 text-xs px-3 py-1 rounded-full font-bold shadow-sm">
                   {user.alYear} A/L Student
                 </span>
@@ -259,6 +255,10 @@ export default function SettingsPage() {
                     onChange={(e) => setPasswords({...passwords, new: e.target.value})}
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 outline-none transition" 
                   />
+                  {/* අකුරු 6ක් තියෙනවද කියලා පෙන්වන කොටස */}
+                  {passwords.new.length > 0 && passwords.new.length < 6 && (
+                    <p className="text-red-500 text-xs mt-1 font-bold">⚠️ මුරපදය අවම වශයෙන් අකුරු 6ක් විය යුතුය.</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2">නව මුරපදය තහවුරු කරන්න</label>
@@ -268,12 +268,18 @@ export default function SettingsPage() {
                     onChange={(e) => setPasswords({...passwords, confirm: e.target.value})}
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-blue-500 outline-none transition" 
                   />
+                  {/* අලුතින් එකතු කළ Real-time Validation පණිවිඩය */}
+                  {passwords.confirm.length > 0 && (
+                    <p className={`text-sm mt-2 font-bold flex items-center gap-1 ${passwords.new === passwords.confirm ? 'text-green-600' : 'text-red-500'}`}>
+                      {passwords.new === passwords.confirm ? '✅ මුරපද දෙක ගැලපේ' : '❌ මුරපද එකිනෙකට නොගැලපේ'}
+                    </p>
+                  )}
                 </div>
 
                 <button 
                   type="submit" 
-                  disabled={loading}
-                  className={`w-full sm:w-auto bg-blue-600 text-white font-bold rounded-xl px-8 py-3.5 shadow-md hover:bg-blue-700 transition transform hover:-translate-y-0.5 mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={loading || (passwords.confirm.length > 0 && passwords.new !== passwords.confirm) || passwords.new.length < 6}
+                  className={`w-full sm:w-auto bg-blue-600 text-white font-bold rounded-xl px-8 py-3.5 shadow-md hover:bg-blue-700 transition transform mt-4 ${(loading || (passwords.confirm.length > 0 && passwords.new !== passwords.confirm) || passwords.new.length < 6) ? 'opacity-50 cursor-not-allowed hover:-translate-y-0' : 'hover:-translate-y-0.5'}`}
                 >
                   {loading ? 'කරුණාකර රැඳී සිටින්න...' : 'මුරපදය යාවත්කාලීන කරන්න'}
                 </button>
