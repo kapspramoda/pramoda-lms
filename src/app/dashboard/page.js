@@ -54,8 +54,6 @@ export default function DashboardPage() {
 
       const fetchMarks = async () => {
         try {
-          // කලින් email එකෙන් සෙව්වත් දැන් username (Phone number) එකෙන් සෙවීමට වෙනස් වී තිබිය හැක.
-          // (API එකට ගැළපෙන පරිදි එය පසුව වෙනස් කරගත හැක)
           const response = await fetch(`/api/marks?email=${userObj.email || userObj.username}`);
           const data = await response.json();
           if (data.marks && data.marks.length > 0) {
@@ -171,7 +169,6 @@ export default function DashboardPage() {
             <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
           </a>
           
-          {/* අලුතින් එකතු කළ දැනුම්දීම් සහ සැකසුම් */}
           <div className="pt-4 border-t border-blue-800/50 mt-4 mb-2"></div>
 
           <a href="#" onClick={(e) => { e.preventDefault(); router.push('/notifications'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
@@ -222,42 +219,35 @@ export default function DashboardPage() {
             <span className="absolute right-10 bottom-0 text-9xl opacity-10 hidden sm:block">👨‍🔬</span>
           </div>
 
-         {/* අලුත් Grid Layout එක (5 Columns) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             
-            {/* 1. Video Lessons Card */}
             <div onClick={() => router.push('/videos')} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-red-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center">
               <div className="w-14 h-14 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300">📺</div>
               <h3 className="text-lg font-bold mb-1 group-hover:text-red-600 transition">වීඩියෝ පාඩම්</h3>
               <p className="text-gray-500 text-xs">සිද්ධාන්ත සහ පුනරීක්ෂණ</p>
-              
             </div>
 
-            {/* 2. Online Exams Card */}
             <div onClick={() => router.push('/exam')} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-blue-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center">
               <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300">💻</div>
               <h3 className="text-lg font-bold mb-1 group-hover:text-blue-600 transition">Online විභාග</h3>
               <p className="text-gray-500 text-xs">MCQ ප්‍රශ්න පත්‍ර</p>
             </div>
 
-            {/* 3. Tutes Card */}
             <div onClick={() => router.push('/tutes')} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-green-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center">
               <div className="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300">📚</div>
               <h3 className="text-lg font-bold mb-1 group-hover:text-green-600 transition">නිබන්ධන</h3>
               <p className="text-gray-500 text-xs">PDF බාගත කරගන්න</p>
             </div>
 
-            {/* 4. Marking Schemes Card */}
             <div onClick={() => router.push('/marking')} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-purple-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center">
               <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300">✅</div>
               <h3 className="text-lg font-bold mb-1 group-hover:text-purple-600 transition">Marking</h3>
               <p className="text-gray-500 text-xs">ලකුණු දීමේ පටිපාටිය</p>
             </div>
-            {/* 5. අලුතින් එකතු කළ "ප්‍රගති වාර්තාව" කාඩ් එක */}
+            
             <div onClick={() => router.push('/dashboard/marks')} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-amber-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center lg:col-span-1 sm:col-span-2">
               <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300 relative">
                  📊
-                 {/* අලුත් කියලා පෙන්වන්න පොඩි dot එකක් */}
                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-white"></span>
               </div>
               <h3 className="text-lg font-bold mb-1 group-hover:text-amber-600 transition">ප්‍රගති වාර්තාව</h3>
@@ -266,9 +256,7 @@ export default function DashboardPage() {
 
           </div>
 
-          {/* Charts Grid (අර්ධ දෙකකින් පෙන්වීම) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* --- පන්ති කාමරයේ ලකුණු (Physical Chart) --- */}
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 group hover:shadow-md transition">
               <div className="flex justify-between items-start mb-6 border-b pb-4">
                 <div>
@@ -281,7 +269,6 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* --- Online විභාග ලකුණු (Online Chart) --- */}
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 group hover:shadow-md transition">
               <div className="flex justify-between items-start mb-6 border-b pb-4">
                 <div>
