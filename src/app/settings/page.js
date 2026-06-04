@@ -102,7 +102,8 @@ export default function SettingsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: user.userName,
+          // මෙන්න මේ පේළිය තමයි නිවැරදිව වෙනස් කළේ
+          username: user.username, 
           currentPassword: passwords.current,
           newPassword: passwords.new,
         }),
@@ -136,35 +137,35 @@ export default function SettingsPage() {
           Pramoda<span className="text-blue-300">Chemistry</span>
         </div>
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">🏠</span><span className="font-medium">මුල් තිරය</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/videos'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">📺</span><span className="font-medium">වීඩියෝ පාඩම්</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/exam'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">💻</span><span className="font-medium">Online විභාග</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/tutes'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">📚</span><span className="font-medium">නිබන්ධන</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/marking'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">✅</span><span className="font-medium">Marking Schemes</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard/marks'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
-  </a>
-  
-  {/* අලුතින් එකතු කළ දැනුම්දීම් සහ සැකසුම් */}
-  <div className="pt-4 border-t border-blue-800/50 mt-4 mb-2"></div>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">🏠</span><span className="font-medium">මුල් තිරය</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/videos'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">📺</span><span className="font-medium">වීඩියෝ පාඩම්</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/exam'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">💻</span><span className="font-medium">Online විභාග</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/tutes'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">📚</span><span className="font-medium">නිබන්ධන</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/marking'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">✅</span><span className="font-medium">Marking Schemes</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard/marks'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
+          </a>
+          
+          {/* අලුතින් එකතු කළ දැනුම්දීම් සහ සැකසුම් */}
+          <div className="pt-4 border-t border-blue-800/50 mt-4 mb-2"></div>
 
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/notifications'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">🔔</span><span className="font-medium">දැනුම්දීම්</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/settings'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">⚙️</span><span className="font-medium">සැකසුම්</span>
-  </a>
-</nav>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/notifications'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">🔔</span><span className="font-medium">දැනුම්දීම්</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/settings'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">⚙️</span><span className="font-medium">සැකසුම්</span>
+          </a>
+        </nav>
         <div className="p-4 border-t border-blue-800">
           <button onClick={handleLogout} className="w-full flex items-center space-x-3 hover:bg-red-500/20 p-3 rounded-lg transition text-blue-200 hover:text-red-400">
             <div className="w-8 h-8 rounded-full bg-blue-800 flex items-center justify-center text-white font-bold text-sm">
@@ -221,7 +222,7 @@ export default function SettingsPage() {
 
               <div className="text-center sm:text-left mt-2 sm:mt-0">
                 <h2 className="text-3xl font-bold">{user.name}</h2>
-                <p className="text-blue-100 mt-1 text-lg">{user.email}</p>
+                <p className="text-blue-100 mt-1 text-lg">{user.username}</p> {/* ඊමේල් වෙනුවට නම්බර් එක පෙන්වීමට වෙනස් කළා */}
                 <span className="inline-block mt-3 bg-white text-blue-700 text-xs px-3 py-1 rounded-full font-bold shadow-sm">
                   {user.alYear} A/L Student
                 </span>
