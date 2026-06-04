@@ -230,6 +230,7 @@ export default function DashboardPage() {
               <div className="w-14 h-14 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300">📺</div>
               <h3 className="text-lg font-bold mb-1 group-hover:text-red-600 transition">වීඩියෝ පාඩම්</h3>
               <p className="text-gray-500 text-xs">සිද්ධාන්ත සහ පුනරීක්ෂණ</p>
+              
             </div>
 
             {/* 2. Online Exams Card */}
