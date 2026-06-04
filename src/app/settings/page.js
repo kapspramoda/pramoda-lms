@@ -122,6 +122,12 @@ export default function SettingsPage() {
     }
   };
 
+  // මෙන්න මේ ආරක්ෂිත කේතය තමයි අලුතින් දැම්මේ.
+  // user දත්ත නැත්නම් Error එන්නේ නැතුව Loading එකක් පෙන්වනවා.
+  if (!user) {
+    return <div className="min-h-screen flex items-center justify-center font-bold text-blue-600 bg-gray-50">ගිණුම පරීක්ෂා කරමින් පවතී... ⏳</div>;
+  }
+
   return (
     <div className="bg-gray-50 font-sans text-gray-800 flex h-screen overflow-hidden">
       
