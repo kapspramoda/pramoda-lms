@@ -9,7 +9,12 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 export default function DashboardPage() {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  // --- අලුතින් එකතු කළ States ---
   const [userName, setUserName] = useState('');
+  const [alYear, setAlYear] = useState('');
+  const [center, setCenter] = useState('');
+  
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [avatar, setAvatar] = useState(null); 
 
@@ -34,6 +39,11 @@ export default function DashboardPage() {
     } else {
       const userObj = JSON.parse(storedUser);
       setUserName(userObj.name);
+      
+      // --- අලුතින් LocalStorage එකෙන් දත්ත ගැනීම ---
+      setAlYear(userObj.alYear || '');
+      setCenter(userObj.center || '');
+      
       setIsAuthorized(true);
 
       const storedAvatar = localStorage.getItem('userAvatar');
@@ -44,7 +54,9 @@ export default function DashboardPage() {
 
       const fetchMarks = async () => {
         try {
-          const response = await fetch(`/api/marks?email=${userObj.email}`);
+          // කලින් email එකෙන් සෙව්වත් දැන් username (Phone number) එකෙන් සෙවීමට වෙනස් වී තිබිය හැක.
+          // (API එකට ගැළපෙන පරිදි එය පසුව වෙනස් කරගත හැක)
+          const response = await fetch(`/api/marks?email=${userObj.email || userObj.username}`);
           const data = await response.json();
           if (data.marks && data.marks.length > 0) {
             
@@ -137,38 +149,38 @@ export default function DashboardPage() {
             Pramoda<span className="text-blue-300">Chemistry</span>
             </div>
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">🏠</span><span className="font-medium">මුල් තිරය</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/videos'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">📺</span><span className="font-medium">වීඩියෝ පාඩම්</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/simulation'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-  <span className="text-xl">🧪</span><span className="font-medium">Simulations</span>
-</a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/exam'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">💻</span><span className="font-medium">Online විභාග</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/tutes'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">📚</span><span className="font-medium">නිබන්ධන</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/marking'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">✅</span><span className="font-medium">Marking Schemes</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard/marks'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
-  </a>
-  
-  {/* අලුතින් එකතු කළ දැනුම්දීම් සහ සැකසුම් */}
-  <div className="pt-4 border-t border-blue-800/50 mt-4 mb-2"></div>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">🏠</span><span className="font-medium">මුල් තිරය</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/videos'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">📺</span><span className="font-medium">වීඩියෝ පාඩම්</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/simulation'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">🧪</span><span className="font-medium">Simulations</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/exam'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">💻</span><span className="font-medium">Online විභාග</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/tutes'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">📚</span><span className="font-medium">නිබන්ධන</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/marking'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">✅</span><span className="font-medium">Marking Schemes</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard/marks'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
+          </a>
+          
+          {/* අලුතින් එකතු කළ දැනුම්දීම් සහ සැකසුම් */}
+          <div className="pt-4 border-t border-blue-800/50 mt-4 mb-2"></div>
 
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/notifications'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">🔔</span><span className="font-medium">දැනුම්දීම්</span>
-  </a>
-  <a href="#" onClick={(e) => { e.preventDefault(); router.push('/settings'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
-    <span className="text-xl">⚙️</span><span className="font-medium">සැකසුම්</span>
-  </a>
-</nav>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/notifications'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">🔔</span><span className="font-medium">දැනුම්දීම්</span>
+          </a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/settings'); }} className="flex items-center space-x-3 hover:bg-blue-800 px-4 py-3 rounded-lg transition">
+            <span className="text-xl">⚙️</span><span className="font-medium">සැකසුම්</span>
+          </a>
+        </nav>
         <div className="p-4 border-t border-blue-800">
           <button onClick={handleLogout} className="w-full flex items-center space-x-3 hover:bg-red-500 p-3 rounded-lg transition text-blue-200 hover:text-white"><span>🚪</span><span>Logout</span></button>
         </div>
@@ -182,7 +194,8 @@ export default function DashboardPage() {
             <div className="flex items-center space-x-3 cursor-pointer">
               <div className="text-right hidden sm:block">
                 <p className="font-bold text-sm">{userName}</p>
-                <p className="text-xs text-green-500 font-bold">Online</p>
+                {/* --- මෙතනත් Batch එක සහ Center එක පේන්න හැදුවා --- */}
+                <p className="text-xs text-green-500 font-bold">{alYear} {center ? `| ${center}` : 'Online'}</p>
               </div>
               <div className="w-10 h-10 rounded-full border-2 border-blue-500 overflow-hidden bg-blue-100 flex items-center justify-center font-bold text-blue-600">
                 {avatar ? <img src={avatar} className="w-full h-full object-cover" /> : userName.charAt(0)}
@@ -196,6 +209,14 @@ export default function DashboardPage() {
           <div className="bg-gradient-to-r from-blue-700 to-blue-500 rounded-3xl p-8 md:p-10 text-white shadow-lg relative overflow-hidden">
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold">ආයුබෝවන් {userName.split(' ')[0]}! 👋</h2>
+              
+              {/* --- මෙන්න මෙතන ලස්සන Badge එකක් විදිහට එකතු කළා --- */}
+              <div className="mt-3 mb-2 inline-block">
+                <span className="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs px-4 py-1.5 rounded-full font-bold shadow-sm tracking-wide">
+                  🎓 {alYear} A/L Student {center && `| 🏛️ ${center} Center`}
+                </span>
+              </div>
+              
               <p className="text-blue-100 mt-2 md:text-lg">අද දවසේ ඔබේ අධ්‍යයන කටයුතු සැලසුම් කරමු.</p>
             </div>
             <span className="absolute right-10 bottom-0 text-9xl opacity-10 hidden sm:block">👨‍🔬</span>
