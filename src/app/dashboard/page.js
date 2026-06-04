@@ -214,7 +214,7 @@ export default function DashboardPage() {
                 </span>
               </div>
               
-              <p className="text-blue-100 mt-2 md:text-lg">අද දවසේ ඔබේ අධ්‍යයන කටයුතු සැලසුම් කරමු.</p>
+              <p className="text-blue-100 mt-2 md:text-lg">අද දවසේ ඔබේ අධ්‍යයන කටයුතු සැලසුම් කරමු .</p>
             </div>
             <span className="absolute right-10 bottom-0 text-9xl opacity-10 hidden sm:block">👨‍🔬</span>
           </div>
