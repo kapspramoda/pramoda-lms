@@ -220,7 +220,7 @@ export default function SettingsPage() {
                 <h2 className="text-3xl font-bold">{user.name}</h2>
                 <p className="text-blue-100 mt-1 text-lg">{user.username}</p> 
                 <span className="inline-block mt-3 bg-white text-blue-700 text-xs px-3 py-1 rounded-full font-bold shadow-sm">
-                  {user.alYear} A/L Student
+                  {user.alYear} A/L Student {user.center && `| ${user.center} Center`}
                 </span>
               </div>
             </div>
