@@ -58,13 +58,13 @@ export default function HomePage() {
     setError(""); setSuccessMsg("");
 
     if (authModal === "login") {
-      if (phone === "ycsadmin" && password === "YCSad@224488") {
+      if (phone === "chemadmin" && password === "chemad@224488") {
         localStorage.setItem("isAdminLoggedIn", "true");
         localStorage.setItem("adminRole", "Admin");
         router.push("/admin");
         return; 
       }
-      if (phone === "ycseditor" && password === "YCS@998844") {
+      if (phone === "chemeditor" && password === "chem@998844") {
         localStorage.setItem("isAdminLoggedIn", "true");
         localStorage.setItem("adminRole", "Editor");
         router.push("/admin");
@@ -131,7 +131,7 @@ export default function HomePage() {
                  m3: "අකාබනික රසායනය", m3d: "මූලද්‍රව්‍යවල හැසිරීම සහ රසායනික ප්‍රතික්‍රියා පහසුවෙන් මතක තබාගැනීමේ ක්‍රමවේද.",
                  m4: "කාබනික රසායනය", m4d: "පරිවර්තන සහ යාන්ත්‍රණ (Mechanisms) ඉතා තර්කානුකූලව ගොඩනඟන ආකාරය." },
       contact: { title: "සම්බන්ධ වන්න", desc: "ගැටළු හෝ විමසීම් සඳහා අප හා සම්බන්ධ වන්න.", info: "අපගේ තොරතුරු", join: "අදම අප හා එක්වන්න!", joinDesc: "පන්ති පිළිබඳ විමසීම්, ලියාපදිංචි වීමේ ගැටළු හෝ වෙනත් ඕනෑම අධ්‍යාපනික කාරණයක් සඳහා අපව අමතන්න.", waBtn: "WhatsApp පණිවිඩයක් යවන්න" },
-      footer: { desc: "Advanced Level Chemistry Education Portal. වසර ගණනාවක විශ්වාසනීය ඉගැන්වීම් සමඟින් ශ්‍රී ලංකාවේ අනාගත විද්‍යාඥයින් බිහිකරන තෝතැන්න.", links: "ඉක්මන් සබැඳි", admin: "පද්ධති කළමනාකරණය" }
+      footer: { desc: "Advanced Level Chemistry Education Portal. වසර ගණනාවක විශ්වාසනීය ඉගැන්වීම් සමඟින් ශ්‍රී ලංකාවේ අනාගත විද්‍යාඥයින් බිහිකරන තෝතැන්න.", links: "ඉක්මන් සබැඳි" }
     },
     en: {
       nav: { home: "Home", schedule: "Schedule", syllabus: "Syllabus", contact: "Contact", login: "Student Login" },
@@ -576,11 +576,11 @@ export default function HomePage() {
           <div>
             <h4 className="text-white font-bold mb-6 text-lg tracking-wide uppercase">{t.footer.admin}</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li>
+              {/* <li>
                 <button onClick={() => router.push('/admin/login')} className="hover:text-amber-400 transition flex items-center gap-2 group">
                   <span className="text-amber-500/70 group-hover:text-amber-500">⚙️</span> Admin Portal
                 </button>
-              </li>
+              </li> */}
             </ul>
           </div>
 
