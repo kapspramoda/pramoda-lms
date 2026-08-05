@@ -62,7 +62,7 @@ export default function MarkingSchemesPage() {
           onClick={() => router.push('/')} 
             className="p-6 border-b border-purple-800 font-bold text-xl tracking-wider cursor-pointer hover:opacity-80 transition"
         >
-        YCS<span className="text-purple-300">Physics</span>
+        PramodaChemistry<span className="text-purple-300"></span>
       </div>
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
   <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard'); }} className="flex items-center space-x-3 hover:bg-purple-800 px-4 py-3 rounded-lg transition">

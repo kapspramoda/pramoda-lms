@@ -213,7 +213,7 @@ export default function VideoLessonsPage() {
       <aside className={`w-64 bg-purple-900 text-white flex flex-col fixed inset-y-0 left-0 z-[9999] transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static transition-transform duration-300 shadow-2xl`}>
         <div onClick={() => router.push('/')} className="p-6 border-b border-purple-800 font-bold text-xl tracking-wider cursor-pointer hover:opacity-80 transition flex items-center gap-2">
           <div className="bg-white text-purple-700 font-bold rounded-lg p-1.5 text-xs">YS</div>
-          YCS<span className="text-purple-300">Physics</span>
+          PramodaChemistry<span className="text-purple-300"></span>
         </div>      
         
         {/* 🔴 Sidebar එක සරල කර ඇත */}

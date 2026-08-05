@@ -6,7 +6,7 @@ import { Line } from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-export default function PhysicsoardPage() {
+export default function oardPage() {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
@@ -148,10 +148,10 @@ export default function PhysicsoardPage() {
       <aside className={`w-64 bg-purple-900 text-white flex flex-col fixed inset-y-0 left-0 z-50 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static transition-transform duration-300 shadow-xl shadow-purple-900/20`}>
         <div onClick={() => router.push('/')} className="p-6 border-b border-purple-800 font-bold text-xl tracking-wider cursor-pointer hover:opacity-80 transition flex items-center gap-2">
           <div className="bg-white text-purple-700 font-bold rounded-lg p-1.5 text-xs">YS</div>
-          YCS<span className="text-purple-300">Physics</span>
+          PramodaChemistry<span className="text-purple-300"></span>
         </div>
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/Physicsoard'); }} className="flex items-center space-x-3 bg-purple-800 text-white px-4 py-3 rounded-xl transition shadow-inner">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/oard'); }} className="flex items-center space-x-3 bg-purple-800 text-white px-4 py-3 rounded-xl transition shadow-inner">
             <span className="text-xl">🏠</span><span className="font-bold">මුල් තිරය</span>
           </a>
           
@@ -169,7 +169,7 @@ export default function PhysicsoardPage() {
           
           {/* 🔴 Marking Schemes ලින්ක් එක අයින් කර ඇත (දැන් එය Tutes/Videos යටතටම එන බැවින්) */}
 
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/Physicsoard/marks'); }} className="flex items-center space-x-3 hover:bg-purple-800/80 text-purple-200 hover:text-white px-4 py-3 rounded-xl transition">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/oard/marks'); }} className="flex items-center space-x-3 hover:bg-purple-800/80 text-purple-200 hover:text-white px-4 py-3 rounded-xl transition">
             <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
           </a>
           
@@ -187,7 +187,7 @@ export default function PhysicsoardPage() {
       <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         <header className={`${headerBg} p-4 flex justify-between items-center sticky top-0 z-30 transition-colors duration-300`}>
           <button onClick={() => setIsSidebarOpen(true)} className={`md:hidden p-2 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}><span className="text-2xl">☰</span></button>
-          <div className={`hidden md:block font-medium ${isDarkMode ? 'text-slate-400' : 'text-gray-400'}`}>A/L Physics අඛණ්ඩ අධ්‍යයන පද්ධතිය</div>
+          <div className={`hidden md:block font-medium ${isDarkMode ? 'text-slate-400' : 'text-gray-400'}`}>A/L  අඛණ්ඩ අධ්‍යයන පද්ධතිය</div>
           
           <div className="flex items-center space-x-4 md:space-x-6">
             <button onClick={toggleTheme} className={`p-2 rounded-full transition-all focus:outline-none ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-purple-100 text-purple-600 hover:bg-purple-200'}`}>
@@ -255,7 +255,7 @@ export default function PhysicsoardPage() {
               <p className={`text-xs ${textMuted}`}>PDF / Marking</p>
             </div>
             
-            <div onClick={() => router.push('/Physicsoard/marks')} className={`${bgCard} p-6 rounded-2xl shadow-sm border border-t-4 border-t-amber-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center`}>
+            <div onClick={() => router.push('/oard/marks')} className={`${bgCard} p-6 rounded-2xl shadow-sm border border-t-4 border-t-amber-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center`}>
               <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300 relative">
                  📊<span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-white"></span>
               </div>

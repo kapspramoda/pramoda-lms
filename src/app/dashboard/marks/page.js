@@ -72,7 +72,7 @@ export default function StudentMarksPage() {
           onClick={() => router.push('/')} 
           className="p-6 border-b border-purple-800 font-bold text-xl tracking-wider cursor-pointer hover:opacity-80 transition"
         >
-          YCS<span className="text-purple-300">Physics</span>
+          PramodaChemistry<span className="text-purple-300"></span>
         </div>
         
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
