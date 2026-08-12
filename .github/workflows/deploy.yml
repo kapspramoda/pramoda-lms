@@ -3,7 +3,7 @@ name: Deploy Next.js Site
 on:
   push:
     branches:
-      - main  # ඔයාගේ ප්‍රධාන Branch එක master නම්, මේක master කියලා වෙනස් කරන්න
+      - main
 
 jobs:
   deploy:
@@ -17,7 +17,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            cd ~/pramoda-lms
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            cd /root/pramoda-lms
             git pull origin main
             npm install
             npm run build
