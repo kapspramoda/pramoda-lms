@@ -398,7 +398,7 @@ export default function HomePage() {
             </div>
 
             <div className={`p-8 rounded-3xl shadow-sm transition duration-300 transform hover:-translate-y-2 group text-center flex flex-col ${cardBg}`}>
-              <h3 className={`text-3xl font-black mb-6 transition duration-300 ${isDarkMode ? 'text-slate-100 group-hover:text-blue-400' : 'text-slate-800 group-hover:text-blue-600'}`}>2026 REVISION</h3>
+              <h3 className={`text-3xl font-black mb-6 transition duration-300 ${isDarkMode ? 'text-slate-100 group-hover:text-blue-400' : 'text-slate-800 group-hover:text-blue-600'}`}>2027 REVISION</h3>
               <div className="flex-1 flex flex-col space-y-6">
                 <div>
                   <h4 className="font-bold text-blue-700 bg-blue-100/50 border border-blue-200/50 py-2 px-6 inline-block rounded-xl mb-3 text-sm tracking-wide">පැනෝලා - මතුගම</h4>
@@ -419,7 +419,7 @@ export default function HomePage() {
 
             <div className={`p-8 rounded-3xl shadow-sm transition duration-300 transform hover:-translate-y-2 group text-center flex flex-col relative overflow-hidden ${cardBg} border-t-blue-700`}>
               <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-bl-xl shadow-sm">HOT</div>
-              <h3 className={`text-3xl font-black mb-6 transition duration-300 ${isDarkMode ? 'text-slate-100 group-hover:text-blue-400' : 'text-slate-800 group-hover:text-blue-600'}`}>2026 PAPERS</h3>
+              <h3 className={`text-3xl font-black mb-6 transition duration-300 ${isDarkMode ? 'text-slate-100 group-hover:text-blue-400' : 'text-slate-800 group-hover:text-blue-600'}`}>2027 PAPERS</h3>
               <div className="flex-1 flex flex-col space-y-6">
                 <div>
                   <h4 className="font-bold text-blue-700 bg-blue-100/50 border border-blue-200/50 py-2 px-6 inline-block rounded-xl mb-3 text-sm tracking-wide">පැනෝලා - මතුගම</h4>
