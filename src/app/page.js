@@ -460,8 +460,8 @@ export default function HomePage() {
                 <h3 className={`text-xl font-black mb-3 ${sectionTitleColor}`}>{t.modules.m2}</h3>
                 <p className={`leading-relaxed text-sm font-medium ${sectionDescColor}`}>{t.modules.m2d}</p>
               </div>
-              <div className={`p-8 rounded-3xl shadow-sm border transition duration-300 group hover:-translate-y-1 ${isDarkMode ? 'bg-slate-900 border-slate-800 hover:shadow-purple-900/20' : 'bg-white border-slate-100 hover:shadow-xl'}`}>
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition duration-300 ${isDarkMode ? 'bg-purple-900/40 text-purple-400' : 'bg-purple-50 text-purple-600'}`}>💎</div>
+              <div className={`p-8 rounded-3xl shadow-sm border transition duration-300 group hover:-translate-y-1 ${isDarkMode ? 'bg-slate-900 border-slate-800 hover:shadow-blue-900/20' : 'bg-white border-slate-100 hover:shadow-xl'}`}>
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition duration-300 ${isDarkMode ? 'bg-blue-900/40 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>💎</div>
                 <h3 className={`text-xl font-black mb-3 ${sectionTitleColor}`}>{t.modules.m3}</h3>
                 <p className={`leading-relaxed text-sm font-medium ${sectionDescColor}`}>{t.modules.m3d}</p>
               </div>

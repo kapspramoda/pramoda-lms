@@ -115,16 +115,16 @@ export default function oardPage() {
   const toggleTodo = (id) => setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo));
   const deleteTodo = (id) => setTodos(todos.filter(todo => todo.id !== id));
 
-  const bgMain = isDarkMode ? "bg-slate-950 text-slate-100" : "bg-purple-50/30 text-gray-800";
-  const bgCard = isDarkMode ? "bg-slate-900 border-slate-800" : "bg-white border-purple-100";
+  const bgMain = isDarkMode ? "bg-slate-950 text-slate-100" : "bg-blue-50/30 text-gray-800";
+  const bgCard = isDarkMode ? "bg-slate-900 border-slate-800" : "bg-white border-blue-100";
   const textMuted = isDarkMode ? "text-slate-400" : "text-gray-500";
   const headerBg = isDarkMode ? "bg-slate-900 border-b border-slate-800" : "bg-white shadow-sm";
 
   const chartData = {
     labels: chartLabels,
     datasets: [{
-      label: 'ලකුණු (%)', data: chartScores, borderColor: '#9333EA', 
-      backgroundColor: isDarkMode ? 'rgba(147, 51, 234, 0.2)' : 'rgba(147, 51, 234, 0.1)',
+      label: 'ලකුණු (%)', data: chartScores, borderColor: '#2563EB', 
+      backgroundColor: isDarkMode ? 'rgba(37, 99, 235, 0.2)' : 'rgba(37, 99, 235, 0.1)',
       borderWidth: 2, pointBackgroundColor: '#FACC15', fill: true, tension: 0.4
     }]
   };
@@ -138,49 +138,49 @@ export default function oardPage() {
     }]
   };
 
-  if (!isAuthorized) return <div className={`min-h-screen flex items-center justify-center font-bold tracking-widest ${isDarkMode ? 'bg-slate-900 text-purple-400' : 'bg-gray-50 text-purple-600'}`}>Loading...</div>;
+  if (!isAuthorized) return <div className={`min-h-screen flex items-center justify-center font-bold tracking-widest ${isDarkMode ? 'bg-slate-900 text-blue-400' : 'bg-gray-50 text-blue-600'}`}>Loading...</div>;
 
   return (
     <div className={`font-sans flex h-screen overflow-hidden transition-colors duration-300 ${bgMain}`}>
       
       <div className={`fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsSidebarOpen(false)}></div>
 
-      <aside className={`w-64 bg-purple-900 text-white flex flex-col fixed inset-y-0 left-0 z-50 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static transition-transform duration-300 shadow-xl shadow-purple-900/20`}>
-        <div onClick={() => router.push('/')} className="p-6 border-b border-purple-800 font-bold text-xl tracking-wider cursor-pointer hover:opacity-80 transition flex items-center gap-2">
+      <aside className={`w-64 bg-blue-900 text-white flex flex-col fixed inset-y-0 left-0 z-50 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static transition-transform duration-300 shadow-xl shadow-blue-900/20`}>
+        <div onClick={() => router.push('/')} className="p-6 border-b border-blue-800 font-bold text-xl tracking-wider cursor-pointer hover:opacity-80 transition flex items-center gap-2">
           
-          PramodaChemistry<span className="text-purple-300"></span>
+          PramodaChemistry<span className="text-blue-300"></span>
         </div>
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/oard'); }} className="flex items-center space-x-3 bg-purple-800 text-white px-4 py-3 rounded-xl transition shadow-inner">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/oard'); }} className="flex items-center space-x-3 bg-blue-800 text-white px-4 py-3 rounded-xl transition shadow-inner">
             <span className="text-xl">🏠</span><span className="font-bold">මුල් තිරය</span>
           </a>
           
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/videos'); }} className="flex items-center space-x-3 hover:bg-purple-800/80 text-purple-200 hover:text-white px-4 py-3 rounded-xl transition">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/videos'); }} className="flex items-center space-x-3 hover:bg-blue-800/80 text-blue-200 hover:text-white px-4 py-3 rounded-xl transition">
             <span className="text-xl">📺</span><span className="font-medium">වීඩියෝ පාඩම්</span>
           </a>
           
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/exam'); }} className="flex items-center space-x-3 hover:bg-purple-800/80 text-purple-200 hover:text-white px-4 py-3 rounded-xl transition">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/exam'); }} className="flex items-center space-x-3 hover:bg-blue-800/80 text-blue-200 hover:text-white px-4 py-3 rounded-xl transition">
             <span className="text-xl">💻</span><span className="font-medium">Online විභාග</span>
           </a>
           
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/tutes'); }} className="flex items-center space-x-3 hover:bg-purple-800/80 text-purple-200 hover:text-white px-4 py-3 rounded-xl transition">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/tutes'); }} className="flex items-center space-x-3 hover:bg-blue-800/80 text-blue-200 hover:text-white px-4 py-3 rounded-xl transition">
             <span className="text-xl">📚</span><span className="font-medium">නිබන්ධන</span>
           </a>
           
           {/* 🔴 Marking Schemes ලින්ක් එක අයින් කර ඇත (දැන් එය Tutes/Videos යටතටම එන බැවින්) */}
 
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/oard/marks'); }} className="flex items-center space-x-3 hover:bg-purple-800/80 text-purple-200 hover:text-white px-4 py-3 rounded-xl transition">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/oard/marks'); }} className="flex items-center space-x-3 hover:bg-blue-800/80 text-blue-200 hover:text-white px-4 py-3 rounded-xl transition">
             <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
           </a>
           
-          <div className="pt-4 border-t border-purple-800 mt-4 mb-2"></div>
+          <div className="pt-4 border-t border-blue-800 mt-4 mb-2"></div>
 
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/settings'); }} className="flex items-center space-x-3 hover:bg-purple-800/80 text-purple-200 hover:text-white px-4 py-3 rounded-xl transition">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/settings'); }} className="flex items-center space-x-3 hover:bg-blue-800/80 text-blue-200 hover:text-white px-4 py-3 rounded-xl transition">
             <span className="text-xl">⚙️</span><span className="font-medium">සැකසුම්</span>
           </a>
         </nav>
-        <div className="p-4 border-t border-purple-800">
-          <button onClick={handleLogout} className="w-full flex items-center space-x-3 hover:bg-red-500 text-purple-200 hover:text-white p-3 rounded-xl transition border border-transparent hover:border-red-500/30"><span>🚪</span><span className="font-bold">Logout</span></button>
+        <div className="p-4 border-t border-blue-800">
+          <button onClick={handleLogout} className="w-full flex items-center space-x-3 hover:bg-red-500 text-blue-200 hover:text-white p-3 rounded-xl transition border border-transparent hover:border-red-500/30"><span>🚪</span><span className="font-bold">Logout</span></button>
         </div>
       </aside>
 
@@ -190,7 +190,7 @@ export default function oardPage() {
           <div className={`hidden md:block font-medium ${isDarkMode ? 'text-slate-400' : 'text-gray-400'}`}>A/L  අඛණ්ඩ අධ්‍යයන පද්ධතිය</div>
           
           <div className="flex items-center space-x-4 md:space-x-6">
-            <button onClick={toggleTheme} className={`p-2 rounded-full transition-all focus:outline-none ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-purple-100 text-purple-600 hover:bg-purple-200'}`}>
+            <button onClick={toggleTheme} className={`p-2 rounded-full transition-all focus:outline-none ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'}`}>
               {isDarkMode ? "☀️" : "🌙"}
             </button>
 
@@ -199,7 +199,7 @@ export default function oardPage() {
                 <p className="font-bold text-sm">{userName}</p>
                 <p className="text-xs text-green-500 font-bold">{alYear} {center ? `| ${center}` : 'Online'}</p>
               </div>
-              <div className="w-10 h-10 rounded-full border-2 border-purple-500 overflow-hidden bg-purple-100 flex items-center justify-center font-bold text-purple-600">
+              <div className="w-10 h-10 rounded-full border-2 border-blue-500 overflow-hidden bg-blue-100 flex items-center justify-center font-bold text-blue-600">
                 {avatar ? <img src={avatar} className="w-full h-full object-cover" /> : userName.charAt(0)}
               </div>
             </div>
@@ -218,7 +218,7 @@ export default function oardPage() {
             </div>
           )}
 
-          <div className="bg-gradient-to-r from-purple-700 to-fuchsia-600 rounded-3xl p-8 md:p-10 text-white shadow-lg shadow-purple-900/20 relative overflow-hidden mt-2">
+          <div className="bg-gradient-to-r from-blue-700 to-cyan-600 rounded-3xl p-8 md:p-10 text-white shadow-lg shadow-blue-900/20 relative overflow-hidden mt-2">
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">ආයුබෝවන් {userName.split(' ')[0]}! 👋</h2>
               
@@ -228,7 +228,7 @@ export default function oardPage() {
                 </span>
               </div>
               
-              <p className="text-purple-100 mt-2 md:text-lg font-medium">දවසේ ඔබේ අධ්‍යයන කටයුතු සැලසුම් කරමු.</p>
+              <p className="text-blue-100 mt-2 md:text-lg font-medium">දවසේ ඔබේ අධ්‍යයන කටයුතු සැලසුම් කරමු.</p>
             </div>
             <span className="absolute right-10 bottom-0 text-9xl opacity-10 hidden sm:block mix-blend-overlay">⚛️</span>
             <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
@@ -243,9 +243,9 @@ export default function oardPage() {
               <p className={`text-xs ${textMuted}`}>සිද්ධාන්ත / Papers</p>
             </div>
 
-            <div onClick={() => router.push('/exam')} className={`${bgCard} p-6 rounded-2xl shadow-sm border border-t-4 border-t-purple-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center`}>
-              <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300">💻</div>
-              <h3 className="text-lg font-bold mb-1 group-hover:text-purple-500 transition">Online විභාග</h3>
+            <div onClick={() => router.push('/exam')} className={`${bgCard} p-6 rounded-2xl shadow-sm border border-t-4 border-t-blue-500 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col items-center text-center`}>
+              <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition duration-300">💻</div>
+              <h3 className="text-lg font-bold mb-1 group-hover:text-blue-500 transition">Online විභාග</h3>
               <p className={`text-xs ${textMuted}`}>MCQ ප්‍රශ්න පත්‍ර</p>
             </div>
 
@@ -267,17 +267,17 @@ export default function oardPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className={`${bgCard} p-6 rounded-2xl shadow-sm border hover:shadow-md transition`}>
-              <div className={`flex justify-between items-start mb-6 border-b pb-4 ${isDarkMode ? 'border-slate-800' : 'border-purple-50'}`}>
+              <div className={`flex justify-between items-start mb-6 border-b pb-4 ${isDarkMode ? 'border-slate-800' : 'border-blue-50'}`}>
                 <div>
-                  <h3 className="text-xl font-bold flex items-center"><span className="mr-2 text-purple-600">🏛️</span> පන්ති කාමරයේ ලකුණු</h3>
-                  <p className={`text-sm mt-2 ${textMuted}`}>සාමාන්‍යය: <span className="bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-md font-bold">{averageMark}%</span></p>
+                  <h3 className="text-xl font-bold flex items-center"><span className="mr-2 text-blue-600">🏛️</span> පන්ති කාමරයේ ලකුණු</h3>
+                  <p className={`text-sm mt-2 ${textMuted}`}>සාමාන්‍යය: <span className="bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-md font-bold">{averageMark}%</span></p>
                 </div>
               </div>
               <div className="h-48 w-full"><Line data={chartData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { display: true, grid: { display: false } } } }} /></div>
             </div>
 
             <div className={`${bgCard} p-6 rounded-2xl shadow-sm border hover:shadow-md transition`}>
-              <div className={`flex justify-between items-start mb-6 border-b pb-4 ${isDarkMode ? 'border-slate-800' : 'border-purple-50'}`}>
+              <div className={`flex justify-between items-start mb-6 border-b pb-4 ${isDarkMode ? 'border-slate-800' : 'border-blue-50'}`}>
                 <div>
                   <h3 className="text-xl font-bold flex items-center"><span className="mr-2 text-green-600">🌐</span> Online ලකුණු</h3>
                   <p className={`text-sm mt-2 ${textMuted}`}>සාමාන්‍යය: <span className="bg-green-100 text-green-800 px-2.5 py-0.5 rounded-md font-bold">{onlineAverage}%</span></p>
@@ -288,16 +288,16 @@ export default function oardPage() {
           </div>
 
           <div className={`${bgCard} rounded-2xl shadow-sm border p-8`}>
-            <h3 className={`text-xl font-bold mb-6 flex items-center border-b pb-4 ${isDarkMode ? 'border-slate-800' : 'border-purple-50'}`}><span className="mr-2 text-2xl">🎯</span> මගේ වැඩ සැලැස්ම (Study Planner)</h3>
+            <h3 className={`text-xl font-bold mb-6 flex items-center border-b pb-4 ${isDarkMode ? 'border-slate-800' : 'border-blue-50'}`}><span className="mr-2 text-2xl">🎯</span> මගේ වැඩ සැලැස්ම (Study Planner)</h3>
             <form onSubmit={handleAddTodo} className="flex flex-col sm:flex-row gap-3 mb-8">
-              <input type="text" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} placeholder="අද දවසේ කළ යුතු වැඩක්..." className={`flex-1 px-5 py-3 rounded-xl border outline-none transition focus:ring-2 focus:ring-purple-500/30 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-500 focus:border-purple-500' : 'bg-purple-50/50 border-purple-100 focus:border-purple-500 focus:bg-white'}`} />
-              <button type="submit" className="bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-md">එකතු කරන්න</button>
+              <input type="text" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} placeholder="අද දවසේ කළ යුතු වැඩක්..." className={`flex-1 px-5 py-3 rounded-xl border outline-none transition focus:ring-2 focus:ring-blue-500/30 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-500 focus:border-blue-500' : 'bg-blue-50/50 border-blue-100 focus:border-blue-500 focus:bg-white'}`} />
+              <button type="submit" className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-md">එකතු කරන්න</button>
             </form>
             <div className="space-y-3">
               {todos.map(todo => (
-                <div key={todo.id} className={`flex justify-between items-center p-4 rounded-xl border transition ${todo.completed ? (isDarkMode ? 'bg-slate-900 border-slate-800 opacity-60' : 'bg-gray-50 border-gray-200 opacity-70') : (isDarkMode ? 'bg-slate-800 border-purple-900/50 shadow-sm' : 'bg-white border-purple-100 shadow-sm')}`}>
+                <div key={todo.id} className={`flex justify-between items-center p-4 rounded-xl border transition ${todo.completed ? (isDarkMode ? 'bg-slate-900 border-slate-800 opacity-60' : 'bg-gray-50 border-gray-200 opacity-70') : (isDarkMode ? 'bg-slate-800 border-blue-900/50 shadow-sm' : 'bg-white border-blue-100 shadow-sm')}`}>
                   <div className="flex items-center gap-4 cursor-pointer flex-1" onClick={() => toggleTodo(todo.id)}>
-                    <input type="checkbox" checked={todo.completed} onChange={() => {}} className="w-5 h-5 accent-purple-600 cursor-pointer rounded" />
+                    <input type="checkbox" checked={todo.completed} onChange={() => {}} className="w-5 h-5 accent-blue-600 cursor-pointer rounded" />
                     <span className={`text-lg ${todo.completed ? (isDarkMode ? 'line-through text-slate-500' : 'line-through text-gray-400') : (isDarkMode ? 'font-medium text-slate-200' : 'font-medium text-gray-800')}`}>{todo.text}</span>
                   </div>
                   <button onClick={() => deleteTodo(todo.id)} className={`p-2 rounded-lg transition text-lg ${isDarkMode ? 'text-slate-500 hover:text-red-400 hover:bg-red-500/10' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}`}>🗑️</button>

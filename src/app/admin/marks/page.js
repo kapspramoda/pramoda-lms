@@ -190,9 +190,9 @@ export default function AdminMarksPage() {
             <button onClick={toggleTheme} className={`p-2 rounded-full transition-all focus:outline-none ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-amber-100 text-amber-600 hover:bg-amber-200'}`}>
               {isDarkMode ? '☀️' : '🌙'}
             </button>
-            <div className={`flex items-center gap-3 px-4 py-2 rounded-full border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-purple-50 border-purple-100'}`}>
+            <div className={`flex items-center gap-3 px-4 py-2 rounded-full border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-blue-50 border-blue-100'}`}>
               <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold">{adminRole.charAt(0)}</div>
-              <span className={`font-bold text-sm hidden sm:block ${isDarkMode ? 'text-purple-400' : 'text-purple-900'}`}>{adminRole} Mode</span>
+              <span className={`font-bold text-sm hidden sm:block ${isDarkMode ? 'text-blue-400' : 'text-blue-900'}`}>{adminRole} Mode</span>
             </div>
           </div>
         </header>
@@ -264,9 +264,9 @@ export default function AdminMarksPage() {
                         </p>
                       </div>
                       <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-                        <span className={`text-xl font-black ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>{mark.score}%</span>
+                        <span className={`text-xl font-black ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{mark.score}%</span>
                         <div className="flex gap-2">
-                          <button onClick={() => handleEdit(mark)} className={`text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-lg transition ${isDarkMode ? 'bg-purple-900/40 text-purple-400 hover:bg-purple-900/60' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}>Edit</button>
+                          <button onClick={() => handleEdit(mark)} className={`text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-lg transition ${isDarkMode ? 'bg-blue-900/40 text-blue-400 hover:bg-blue-900/60' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}>Edit</button>
                           <button onClick={() => handleDelete(mark._id)} className={`text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-lg transition ${isDarkMode ? 'bg-red-900/30 text-red-500 hover:bg-red-900/50' : 'bg-red-100 text-red-600 hover:bg-red-200'}`}>Erase</button>
                         </div>
                       </div>
@@ -297,9 +297,9 @@ export default function AdminMarksPage() {
                 ) : (
                   Object.keys(groupedMarks).map((paperName, idx) => (
                     <div key={idx} className={`${bgCard} rounded-3xl overflow-hidden`}>
-                      <div className={`p-4 md:p-5 flex flex-wrap justify-between items-center border-b ${isDarkMode ? 'bg-slate-800/80 border-slate-700' : 'bg-purple-50 border-purple-100'}`}>
-                        <h3 className={`text-lg md:text-xl font-bold flex items-center gap-2 ${isDarkMode ? 'text-purple-400' : 'text-purple-900'}`}><span>📝</span> {paperName}</h3>
-                        <span className={`font-bold px-3 py-1 rounded-full shadow-sm text-xs mt-2 sm:mt-0 ${isDarkMode ? 'bg-slate-900 text-purple-400 border border-slate-700' : 'bg-white text-purple-600'}`}>සිසුන් {groupedMarks[paperName].length} ක්</span>
+                      <div className={`p-4 md:p-5 flex flex-wrap justify-between items-center border-b ${isDarkMode ? 'bg-slate-800/80 border-slate-700' : 'bg-blue-50 border-blue-100'}`}>
+                        <h3 className={`text-lg md:text-xl font-bold flex items-center gap-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-900'}`}><span>📝</span> {paperName}</h3>
+                        <span className={`font-bold px-3 py-1 rounded-full shadow-sm text-xs mt-2 sm:mt-0 ${isDarkMode ? 'bg-slate-900 text-blue-400 border border-slate-700' : 'bg-white text-blue-600'}`}>සිසුන් {groupedMarks[paperName].length} ක්</span>
                       </div>
                       <div className={`overflow-x-auto p-0 sm:p-4 custom-scrollbar`}>
                         <table className="w-full text-left border-collapse min-w-[500px]">
@@ -318,7 +318,7 @@ export default function AdminMarksPage() {
                                   {rankIndex === 0 ? <span className="text-2xl" title="පළමු ස්ථානය">🥇</span> : rankIndex === 1 ? <span className="text-2xl" title="දෙවන ස්ථානය">🥈</span> : rankIndex === 2 ? <span className="text-2xl" title="තෙවන ස්ථානය">🥉</span> : <span className={`font-bold ${isDarkMode ? 'text-slate-500' : 'text-gray-500'}`}>{rankIndex + 1}</span>}
                                 </td>
                                 <td className={`p-4 font-bold text-sm ${isDarkMode ? 'text-slate-200' : 'text-gray-800'}`}>{getStudentName(mark.email)}</td>
-                                <td className={`p-4 text-center font-black text-lg ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>{mark.score}%</td>
+                                <td className={`p-4 text-center font-black text-lg ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{mark.score}%</td>
                                 <td className="p-4 text-center">
                                   <button onClick={() => handleDelete(mark._id)} className={`font-bold text-xs px-3 py-1.5 rounded-lg transition ${isDarkMode ? 'bg-red-900/30 text-red-500 hover:bg-red-900/50 border border-red-900/50' : 'bg-red-50 text-red-500 hover:text-red-700 hover:bg-red-100'}`}>🗑️ මකන්න</button>
                                 </td>

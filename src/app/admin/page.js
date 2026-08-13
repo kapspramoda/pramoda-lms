@@ -104,7 +104,7 @@ export default function AdminDashboard() {
   const bgCard = isDarkMode ? "bg-slate-900 border-slate-800" : "bg-white border-transparent shadow-sm";
   const textMuted = isDarkMode ? "text-slate-400" : "text-gray-500";
   const headerBg = isDarkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200 shadow-sm";
-  const inputBg = isDarkMode ? "bg-slate-800 border-slate-700 text-white focus:ring-purple-500/50" : "bg-gray-50 border-gray-200 text-gray-900 focus:border-purple-500/50";
+  const inputBg = isDarkMode ? "bg-slate-800 border-slate-700 text-white focus:ring-blue-500/50" : "bg-gray-50 border-gray-200 text-gray-900 focus:border-blue-500/50";
 
   if (!isAuthorized) return <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-slate-950 text-white' : 'bg-gray-100 text-gray-500'}`}><p className="font-bold">Checking Authorization...</p></div>;
 
@@ -121,7 +121,7 @@ export default function AdminDashboard() {
         
         {/* 🔴 Sidebar Navigation with Roles */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/admin'); }} className="flex items-center space-x-3 bg-purple-600 px-4 py-3 rounded-xl text-white font-bold shadow-md"><span>🏠</span><span>මුල් තිරය</span></a>
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/admin'); }} className="flex items-center space-x-3 bg-blue-600 px-4 py-3 rounded-xl text-white font-bold shadow-md"><span>🏠</span><span>මුල් තිරය</span></a>
           
           {adminRole === 'Admin' && (
             <a href="#" onClick={(e) => { e.preventDefault(); router.push('/admin/students'); }} className="flex items-center space-x-3 hover:bg-slate-800 px-4 py-3 rounded-xl transition text-gray-300 hover:text-white"><span>👥</span><span>සිසුන් කළමනාකරණය</span></a>
@@ -160,12 +160,12 @@ export default function AdminDashboard() {
             <h1 className="text-xl font-bold hidden sm:block">Pramoda Chemistry LMS</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <button onClick={toggleTheme} className={`p-2 rounded-full transition-all focus:outline-none ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-purple-100 text-purple-600 hover:bg-purple-200'}`}>
+            <button onClick={toggleTheme} className={`p-2 rounded-full transition-all focus:outline-none ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'}`}>
               {isDarkMode ? '☀️' : '🌙'}
             </button>
-            <div className={`flex items-center gap-3 px-4 py-2 rounded-full border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-purple-50 border-purple-100'}`}>
-              <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">{adminRole.charAt(0)}</div>
-              <span className={`font-bold text-sm hidden sm:block ${isDarkMode ? 'text-purple-400' : 'text-purple-900'}`}>{adminRole} Mode</span>
+            <div className={`flex items-center gap-3 px-4 py-2 rounded-full border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-blue-50 border-blue-100'}`}>
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">{adminRole.charAt(0)}</div>
+              <span className={`font-bold text-sm hidden sm:block ${isDarkMode ? 'text-blue-400' : 'text-blue-900'}`}>{adminRole} Mode</span>
             </div>
           </div>
         </header>
@@ -273,12 +273,12 @@ export default function AdminDashboard() {
                   <button onClick={() => router.push('/admin/tutes')} className={`w-full font-bold py-3 rounded-xl transition ${isDarkMode ? 'bg-green-900/50 text-green-400 hover:bg-green-900' : 'bg-green-50 text-green-600 hover:bg-green-100'}`}>කළමනාකරණය</button>
                 </div>
 
-                <div className={`${bgCard} p-8 rounded-3xl border border-t-8 border-t-purple-500 hover:shadow-lg transition transform hover:-translate-y-1`}>
+                <div className={`${bgCard} p-8 rounded-3xl border border-t-8 border-t-blue-500 hover:shadow-lg transition transform hover:-translate-y-1`}>
                   <div className="flex justify-between items-start mb-6">
                     <div><h2 className="text-2xl font-bold mb-2">ප්‍රශ්න පත්‍ර</h2><p className={`text-sm ${textMuted}`}>Online MCQ ප්‍රශ්න සැකසීම.</p></div>
                     <div className="text-5xl">📝</div>
                   </div>
-                  <button onClick={() => router.push('/admin/questions')} className={`w-full font-bold py-3 rounded-xl transition ${isDarkMode ? 'bg-purple-900/50 text-purple-400 hover:bg-purple-900' : 'bg-purple-50 text-purple-600 hover:bg-purple-100'}`}>කළමනාකරණය</button>
+                  <button onClick={() => router.push('/admin/questions')} className={`w-full font-bold py-3 rounded-xl transition ${isDarkMode ? 'bg-blue-900/50 text-blue-400 hover:bg-blue-900' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}>කළමනාකරණය</button>
                 </div>
               </>
             )}

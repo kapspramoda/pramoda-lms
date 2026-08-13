@@ -215,9 +215,9 @@ export default function AdminAttendancePage() {
             <button onClick={toggleTheme} className={`p-2 rounded-full transition-all focus:outline-none ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-teal-100 text-teal-600 hover:bg-teal-200'}`}>
               {isDarkMode ? '☀️' : '🌙'}
             </button>
-            <div className={`flex items-center gap-3 px-4 py-2 rounded-full border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-purple-50 border-purple-100'}`}>
+            <div className={`flex items-center gap-3 px-4 py-2 rounded-full border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-blue-50 border-blue-100'}`}>
               <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold">{adminRole.charAt(0)}</div>
-              <span className={`font-bold text-sm hidden sm:block ${isDarkMode ? 'text-purple-400' : 'text-purple-900'}`}>{adminRole} Mode</span>
+              <span className={`font-bold text-sm hidden sm:block ${isDarkMode ? 'text-blue-400' : 'text-blue-900'}`}>{adminRole} Mode</span>
             </div>
           </div>
         </header>
@@ -345,7 +345,7 @@ export default function AdminAttendancePage() {
                             <th key={date} className={`p-3 text-center border-r min-w-[90px] ${isDarkMode ? 'border-slate-700' : 'border-slate-200'}`}>
                               <div className="text-lg font-black">{day}</div>
                               {note ? (
-                                <div className={`text-[10px] font-bold mt-1 px-1 rounded truncate max-w-[80px] mx-auto border ${isDarkMode ? 'bg-purple-900/30 text-purple-400 border-purple-800' : 'bg-purple-50 text-purple-600 border-purple-100'}`} title={note}>
+                                <div className={`text-[10px] font-bold mt-1 px-1 rounded truncate max-w-[80px] mx-auto border ${isDarkMode ? 'bg-blue-900/30 text-blue-400 border-blue-800' : 'bg-blue-50 text-blue-600 border-blue-100'}`} title={note}>
                                   {note}
                                 </div>
                               ) : (

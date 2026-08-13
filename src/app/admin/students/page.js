@@ -196,8 +196,8 @@ export default function AdminStudentsPage() {
     datasets: [{
       label: 'ලකුණු (%)',
       data: chartScores.length > 0 ? chartScores : [0],
-      borderColor: '#9333EA', 
-      backgroundColor: isDarkMode ? 'rgba(147, 51, 234, 0.2)' : 'rgba(147, 51, 234, 0.1)',
+      borderColor: '#2563EB', 
+      backgroundColor: isDarkMode ? 'rgba(37, 99, 235, 0.2)' : 'rgba(37, 99, 235, 0.1)',
       borderWidth: 2, pointBackgroundColor: '#FACC15', fill: true, tension: 0.4
     }]
   };
@@ -259,7 +259,7 @@ export default function AdminStudentsPage() {
                 <span className="text-3xl mb-2">📚</span>
                 <span className="text-sm font-bold">නිබන්ධන</span>
               </div>
-              <div onClick={() => router.push('/admin/questions')} className={`${bgCard} p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition transform hover:-translate-y-1 hover:shadow-md border-b-4 border-purple-500`}>
+              <div onClick={() => router.push('/admin/questions')} className={`${bgCard} p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition transform hover:-translate-y-1 hover:shadow-md border-b-4 border-blue-500`}>
                 <span className="text-3xl mb-2">📝</span>
                 <span className="text-sm font-bold">ප්‍රශ්න පත්‍ර</span>
               </div>
@@ -428,7 +428,7 @@ export default function AdminStudentsPage() {
                 <button onClick={() => setSelectedStudent(null)} className={`absolute top-4 right-4 p-2 rounded-full font-bold text-xl ${isDarkMode ? 'bg-slate-800 text-gray-400 hover:text-white' : 'bg-gray-100 text-gray-600 hover:text-red-500'}`}>✖</button>
                 
                 <div className="flex items-center gap-4 mb-6 border-b pb-6 border-opacity-20">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-2xl font-bold text-white shadow-md">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-blue-500 flex items-center justify-center text-2xl font-bold text-white shadow-md">
                     {selectedStudent.name.charAt(0)}
                   </div>
                   <div>
