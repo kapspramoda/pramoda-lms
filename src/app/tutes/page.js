@@ -77,7 +77,7 @@ export default function StudentTutes() {
           onClick={() => router.push('/')} 
           className="p-6 border-b border-purple-800 font-bold text-xl tracking-wider cursor-pointer hover:opacity-80 transition flex items-center gap-2"
         >
-          <div className="bg-white text-purple-700 font-bold rounded-lg p-1.5 text-xs"></div>
+          
           PramodaChemistry<span className="text-purple-300"></span>
         </div>
         
