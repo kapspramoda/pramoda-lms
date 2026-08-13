@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import * as XLSX from 'xlsx'; // 🔴 Excel කියවීමට අවශ්‍ය පැකේජය
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
@@ -21,18 +22,26 @@ export default function AdminStudentsPage() {
     isTheory: true, isRevision: false, isPaper: false
   });
 
-  // Bulk Form State
-  const [bulkText, setBulkText] = useState('');
+  // 🔴 Excel Bulk Upload States
+  const [bulkFile, setBulkFile] = useState(null);
+  const [bulkSettings, setBulkSettings] = useState({
+    password: '', alYear: '2026', center: '',
+    isTheory: true, isRevision: false, isPaper: false
+  });
 
   const [msg, setMsg] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
   const [students, setStudents] = useState([]);
-  const [isFetchingStudents, setIsFetchingStudents] = useState(true); // Loading state for students list
+  const [isFetchingStudents, setIsFetchingStudents] = useState(true);
 
   // Student Profile Modal States
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [studentMarks, setStudentMarks] = useState([]);
   const [modalLoading, setModalLoading] = useState(false);
+
+  // Edit Student States
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editStudentData, setEditStudentData] = useState(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -56,11 +65,8 @@ export default function AdminStudentsPage() {
   const fetchStudents = async () => {
     setIsFetchingStudents(true);
     try {
-      // API එකට කතා කරලා දත්ත ගන්නවා
       const res = await fetch('/api/users?year=All', { cache: 'no-store' });
       const data = await res.json();
-      
-      // දත්ත ආවොත් ඒක State එකට දානවා
       if (data && data.users) {
         setStudents(data.users);
       } else {
@@ -73,6 +79,8 @@ export default function AdminStudentsPage() {
       setIsFetchingStudents(false);
     }
   };
+
+  const uniqueCenters = [...new Set(students.map(s => s.center).filter(Boolean))];
 
   // --- Single Student Submit ---
   const handleSingleSubmit = async (e) => {
@@ -104,8 +112,8 @@ export default function AdminStudentsPage() {
       const data = await res.json();
       if (res.ok) {
         setMsg({ type: 'success', text: 'සිසුවා සාර්ථකව පද්ධතියට එක් කළා! ✅' });
-        setFormData({ name: '', email: '', password: '', alYear: '2026', center: '', isTheory: true, isRevision: false, isPaper: false });
-        fetchStudents(); // Submit කරාට පස්සේ අනිවාර්යයෙන්ම List එක Update කරනවා
+        setFormData({ ...formData, name: '', email: '', password: '' });
+        fetchStudents(); 
       } else { throw new Error(data.message || 'දෝෂයක් මතු විය.'); }
     } catch (error) {
       setMsg({ type: 'error', text: error.message });
@@ -115,49 +123,146 @@ export default function AdminStudentsPage() {
     }
   };
 
-  // --- Bulk Student Submit ---
-  const handleBulkSubmit = async (e) => {
+  // --- 🔴 Excel Bulk Submit ---
+  const handleExcelBulkSubmit = async (e) => {
     e.preventDefault();
-    if (!bulkText.trim()) return;
+    if (!bulkFile) {
+      setMsg({ type: 'error', text: 'කරුණාකර Excel ෆයිල් එකක් තෝරන්න!' });
+      return;
+    }
+
     setLoading(true);
     setMsg({ type: '', text: '' });
 
-    const lines = bulkText.split('\n');
-    let successCount = 0;
-    let errorCount = 0;
+    const classes = [];
+    if (bulkSettings.isTheory) classes.push('Theory');
+    if (bulkSettings.isRevision) classes.push('Revision');
+    if (bulkSettings.isPaper) classes.push('Paper');
 
-    for (let line of lines) {
-      if (!line.trim()) continue;
-      const parts = line.split(',');
-      if (parts.length < 5) { errorCount++; continue; }
-
-      const name = parts[0].trim();
-      const phone = parts[1].trim();
-      const password = parts[2].trim();
-      const alYear = parts[3].trim();
-      const center = parts[4].trim();
-      
-      const classesRaw = parts[5] ? parts[5].toUpperCase() : 'T';
-      const classTypes = [];
-      if (classesRaw.includes('T')) classTypes.push('Theory');
-      if (classesRaw.includes('R')) classTypes.push('Revision');
-      if (classesRaw.includes('P')) classTypes.push('Paper');
-      if (classTypes.length === 0) classTypes.push('Theory'); // Default
-
-      try {
-        const res = await fetch('/api/users', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email: phone, password, alYear, center, classTypes })
-        });
-        if (res.ok) successCount++; else errorCount++;
-      } catch (err) { errorCount++; }
+    if (classes.length === 0) {
+      setMsg({ type: 'error', text: 'අවම වශයෙන් එක් පන්ති වර්ගයක් හෝ තෝරන්න!' });
+      setLoading(false); return;
     }
 
-    setMsg({ type: 'success', text: `සාර්ථකයි: ${successCount} | අසාර්ථකයි (දැනටමත් ඇත): ${errorCount}` });
-    setBulkText('');
-    fetchStudents(); // Bulk Submit කරාට පස්සේ අනිවාර්යයෙන්ම List එක Update කරනවා
-    setLoading(false);
-    setTimeout(() => setMsg({ type: '', text: '' }), 5000);
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const data = new Uint8Array(evt.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        
+        // Excel දත්ත array එකක් බවට පත් කිරීම
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        let successCount = 0;
+        let errorCount = 0;
+
+        for (let i = 0; i < jsonData.length; i++) {
+          const row = jsonData[i];
+          if (!row || row.length < 2) continue; // අවම වශයෙන් තීරු 2ක් (නම, අංකය) තිබිය යුතුය
+
+          const name = String(row[0]).trim();
+          const phone = String(row[1]).trim();
+
+          // Header Row එක මගහැරීම
+          if (name.toLowerCase() === 'name' || phone.toLowerCase().includes('phone') || phone.toLowerCase().includes('number')) {
+            continue;
+          }
+
+          if (!name || !phone) continue;
+
+          try {
+            const res = await fetch('/api/users', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                name, 
+                email: phone, 
+                password: bulkSettings.password, 
+                alYear: bulkSettings.alYear, 
+                center: bulkSettings.center, 
+                classTypes: classes 
+              })
+            });
+            if (res.ok) successCount++; else errorCount++;
+          } catch (err) { errorCount++; }
+        }
+
+        setMsg({ type: 'success', text: `සාර්ථකයි: ${successCount} | දැනටමත් ඇත/අසාර්ථකයි: ${errorCount}` });
+        setBulkFile(null); // File input එක clear කිරීම
+        // Settings clear කිරීම අවශ්‍ය නම් පමණක් මෙහි හැදීමට පුළුවන (දැනට center/year වෙනස් වෙන්නේ නෑ)
+        setBulkSettings({ ...bulkSettings, password: '' });
+        
+        fetchStudents();
+      } catch (err) {
+        console.error(err);
+        setMsg({ type: 'error', text: 'Excel ෆයිල් එක කියවීමේදී දෝෂයක් මතු විය.' });
+      } finally {
+        setLoading(false);
+        setTimeout(() => setMsg({ type: '', text: '' }), 5000);
+      }
+    };
+    
+    reader.readAsArrayBuffer(bulkFile);
+  };
+
+  // --- Edit Student Logic ---
+  const openEditModal = (student) => {
+    setEditStudentData({
+      id: student._id,
+      name: student.name,
+      email: student.email,
+      password: '',
+      alYear: student.alYear || '2026',
+      center: student.center || '',
+      isTheory: student.classTypes?.includes('Theory') || false,
+      isRevision: student.classTypes?.includes('Revision') || false,
+      isPaper: student.classTypes?.includes('Paper') || false,
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const classes = [];
+    if (editStudentData.isTheory) classes.push('Theory');
+    if (editStudentData.isRevision) classes.push('Revision');
+    if (editStudentData.isPaper) classes.push('Paper');
+
+    try {
+      const payload = {
+        id: editStudentData.id,
+        name: editStudentData.name,
+        email: editStudentData.email,
+        alYear: editStudentData.alYear,
+        center: editStudentData.center,
+        classTypes: classes
+      };
+      if (editStudentData.password) {
+        payload.password = editStudentData.password;
+      }
+
+      const res = await fetch('/api/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        alert('සිසුවාගේ දත්ත යාවත්කාලීන විය! ✅');
+        setIsEditModalOpen(false);
+        fetchStudents();
+      } else {
+        const data = await res.json();
+        throw new Error(data.message || 'දෝෂයක් මතු විය.');
+      }
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleStudentStatus = async (id, currentStatus) => {
@@ -243,29 +348,23 @@ export default function AdminStudentsPage() {
 
         <div className="p-6 md:p-10 max-w-7xl mx-auto w-full">
 
-          {/* --- Quick Links / Dashboard Top Row --- */}
           <div className="mb-10">
             <h2 className="text-xl md:text-2xl font-bold mb-6">මොකක්ද අද කරන්න තියෙන්නේ? 🚀</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <div onClick={() => router.push('/admin/attendance')} className={`${bgCard} p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition transform hover:-translate-y-1 hover:shadow-md border-b-4 border-teal-500`}>
-                <span className="text-3xl mb-2">✅</span>
-                <span className="text-sm font-bold">පැමිණීම</span>
+                <span className="text-3xl mb-2">✅</span><span className="text-sm font-bold">පැමිණීම</span>
               </div>
               <div onClick={() => router.push('/admin/videos')} className={`${bgCard} p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition transform hover:-translate-y-1 hover:shadow-md border-b-4 border-red-500`}>
-                <span className="text-3xl mb-2">📺</span>
-                <span className="text-sm font-bold">වීඩියෝ</span>
+                <span className="text-3xl mb-2">📺</span><span className="text-sm font-bold">වීඩියෝ</span>
               </div>
               <div onClick={() => router.push('/admin/tutes')} className={`${bgCard} p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition transform hover:-translate-y-1 hover:shadow-md border-b-4 border-green-500`}>
-                <span className="text-3xl mb-2">📚</span>
-                <span className="text-sm font-bold">නිබන්ධන</span>
+                <span className="text-3xl mb-2">📚</span><span className="text-sm font-bold">නිබන්ධන</span>
               </div>
               <div onClick={() => router.push('/admin/questions')} className={`${bgCard} p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition transform hover:-translate-y-1 hover:shadow-md border-b-4 border-blue-500`}>
-                <span className="text-3xl mb-2">📝</span>
-                <span className="text-sm font-bold">ප්‍රශ්න පත්‍ර</span>
+                <span className="text-3xl mb-2">📝</span><span className="text-sm font-bold">ප්‍රශ්න පත්‍ර</span>
               </div>
               <div onClick={() => router.push('/admin/marks')} className={`${bgCard} p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition transform hover:-translate-y-1 hover:shadow-md border-b-4 border-amber-500`}>
-                <span className="text-3xl mb-2">📊</span>
-                <span className="text-sm font-bold">ලකුණු</span>
+                <span className="text-3xl mb-2">📊</span><span className="text-sm font-bold">ලකුණු</span>
               </div>
             </div>
           </div>
@@ -280,13 +379,12 @@ export default function AdminStudentsPage() {
                   <h2 className="text-xl font-bold">➕ සිසුන් එකතු කිරීම</h2>
                 </div>
 
-                {/* Single / Bulk Toggle Buttons */}
                 <div className={`flex rounded-xl p-1 mb-6 ${isDarkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
                   <button onClick={() => setAddMode('single')} className={`flex-1 py-2 rounded-lg text-sm font-bold transition ${addMode === 'single' ? 'bg-white text-blue-600 shadow-sm' : (isDarkMode ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-gray-800')}`}>
                     Single Add
                   </button>
                   <button onClick={() => setAddMode('bulk')} className={`flex-1 py-2 rounded-lg text-sm font-bold transition ${addMode === 'bulk' ? 'bg-white text-blue-600 shadow-sm' : (isDarkMode ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-gray-800')}`}>
-                    Bulk Upload
+                    Excel Bulk Upload
                   </button>
                 </div>
 
@@ -319,7 +417,10 @@ export default function AdminStudentsPage() {
                       </div>
                       <div>
                         <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>මධ්‍යස්ථානය</label>
-                        <input type="text" required value={formData.center} onChange={(e) => setFormData({...formData, center: e.target.value})} className={`w-full px-3 py-3 rounded-xl border outline-none transition ${inputBg}`} placeholder="උදා: මතුගම"/>
+                        <input list="center-options" type="text" required value={formData.center} onChange={(e) => setFormData({...formData, center: e.target.value})} className={`w-full px-3 py-3 rounded-xl border outline-none transition ${inputBg}`} placeholder="උදා: මතුගම"/>
+                        <datalist id="center-options">
+                          {uniqueCenters.map((c, i) => <option key={i} value={c} />)}
+                        </datalist>
                       </div>
                     </div>
 
@@ -347,24 +448,59 @@ export default function AdminStudentsPage() {
                   </form>
                 )}
 
-                {/* --- Bulk Add Form --- */}
+                {/* --- 🔴 Excel Bulk Add Form --- */}
                 {addMode === 'bulk' && (
-                  <form onSubmit={handleBulkSubmit} className="space-y-4 animate-fade-in">
+                  <form onSubmit={handleExcelBulkSubmit} className="space-y-4 animate-fade-in">
                     <div className={`p-3 rounded-lg border text-xs leading-relaxed mb-4 ${isDarkMode ? 'bg-blue-900/20 border-blue-800 text-blue-300' : 'bg-blue-50 border-blue-200 text-blue-800'}`}>
-                      <strong>Format:</strong> නම, Phone, Password, වර්ෂය, මධ්‍යස්ථානය, පන්ති වර්ගය (T, R, P)<br/><br/>
-                      <strong>උදාහරණ:</strong><br/>
-                      Kamal, 0711111111, pwd123, 2026, Mathugama, T R<br/>
-                      Nimal, 0722222222, 123456, 2027, Online, P
+                      <strong>උපදෙස්:</strong> Excel (.xlsx, .csv) ෆයිල් එකක් තෝරන්න. <br/><br/>
+                      පළමු තීරුවේ (Column A) <strong>නම</strong> සහ දෙවන තීරුවේ (Column B) <strong>WhatsApp අංකය</strong> පමණක් තිබිය යුතුය. අනිත් සියලු විස්තර පහතින් තෝරා දෙන්න.
                     </div>
-                    <textarea 
-                      value={bulkText} 
-                      onChange={(e) => setBulkText(e.target.value)} 
-                      placeholder="මෙහි Copy-Paste කරන්න..." 
-                      className={`w-full px-4 py-3 rounded-xl border outline-none transition min-h-[250px] whitespace-pre text-sm custom-scrollbar ${inputBg}`}
-                      required 
-                    />
+                    
+                    <div>
+                      <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>Excel ෆයිල් එක තෝරන්න</label>
+                      <input type="file" accept=".xlsx, .xls, .csv" onChange={(e) => setBulkFile(e.target.files[0])} className={`w-full px-4 py-3 rounded-xl border outline-none transition bg-white text-gray-900 ${isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'border-gray-200'}`} required />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>පොදු මුරපදය (Password)</label>
+                      <input type="text" required value={bulkSettings.password} onChange={(e) => setBulkSettings({...bulkSettings, password: e.target.value})} className={`w-full px-4 py-3 rounded-xl border outline-none transition ${inputBg}`} placeholder="සියලු සිසුන් සඳහා එකම මුරපදය"/>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>A/L වර්ෂය</label>
+                        <select value={bulkSettings.alYear} onChange={(e) => setBulkSettings({...bulkSettings, alYear: e.target.value})} className={`w-full px-3 py-3 rounded-xl border outline-none transition ${inputBg}`}>
+                          <option value="2026">2026</option>
+                          <option value="2027">2027</option>
+                          <option value="2028">2028</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>මධ්‍යස්ථානය</label>
+                        <input list="center-options" type="text" required value={bulkSettings.center} onChange={(e) => setBulkSettings({...bulkSettings, center: e.target.value})} className={`w-full px-3 py-3 rounded-xl border outline-none transition ${inputBg}`} placeholder="උදා: මතුගම"/>
+                      </div>
+                    </div>
+
+                    <div className={`p-4 rounded-xl border ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-blue-50/50 border-blue-100'}`}>
+                      <label className={`block text-xs font-bold mb-3 ${isDarkMode ? 'text-blue-400' : 'text-blue-800'}`}>පන්ති වර්ගය (සියලු සිසුන් සඳහා):</label>
+                      <div className="flex flex-col gap-3">
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input type="checkbox" checked={bulkSettings.isTheory} onChange={(e) => setBulkSettings({...bulkSettings, isTheory: e.target.checked})} className="w-5 h-5 accent-blue-600 rounded" />
+                          <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-700'}`}>Theory</span>
+                        </label>
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input type="checkbox" checked={bulkSettings.isRevision} onChange={(e) => setBulkSettings({...bulkSettings, isRevision: e.target.checked})} className="w-5 h-5 accent-blue-600 rounded" />
+                          <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-700'}`}>Revision</span>
+                        </label>
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input type="checkbox" checked={bulkSettings.isPaper} onChange={(e) => setBulkSettings({...bulkSettings, isPaper: e.target.checked})} className="w-5 h-5 accent-blue-600 rounded" />
+                          <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-700'}`}>Paper Class</span>
+                        </label>
+                      </div>
+                    </div>
+
                     <button type="submit" disabled={loading} className={`w-full text-white font-bold rounded-xl px-4 py-4 shadow-md transition mt-4 ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}`}>
-                      {loading ? 'රැඳී සිටින්න...' : 'Bulk Upload කරන්න'}
+                      {loading ? 'රැඳී සිටින්න...' : 'Excel දත්ත ඇතුළත් කරන්න'}
                     </button>
                   </form>
                 )}
@@ -403,7 +539,10 @@ export default function AdminStudentsPage() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                          <button onClick={() => openEditModal(student)} className={`flex-1 sm:flex-none px-3 py-2 rounded-xl font-bold text-xs transition-all shadow-sm ${isDarkMode ? 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 border border-blue-900/50' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}>
+                            ✏️ Edit
+                          </button>
                           <button onClick={() => toggleStudentStatus(student._id, student.status)} className={`flex-1 sm:flex-none px-3 py-2 rounded-xl font-bold text-xs transition-all shadow-sm ${student.status === 'Inactive' ? (isDarkMode ? 'bg-green-900/30 text-green-500 hover:bg-green-900/50 border border-green-900/50' : 'bg-green-100 text-green-700 hover:bg-green-200') : (isDarkMode ? 'bg-yellow-900/30 text-yellow-500 hover:bg-yellow-900/50 border border-yellow-900/50' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200')}`}>
                             {student.status === 'Inactive' ? '✔️ Activate' : '🚫 Deactivate'}
                           </button>
@@ -420,8 +559,72 @@ export default function AdminStudentsPage() {
             </div>
           </div>
 
+          {/* --- Edit Student Modal --- */}
+          {isEditModalOpen && editStudentData && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity animate-fade-in">
+              <div className={`relative w-full max-w-lg overflow-y-auto p-6 md:p-8 rounded-3xl shadow-2xl ${isDarkMode ? 'bg-slate-900 border border-slate-700 text-white' : 'bg-white text-gray-900'}`}>
+                
+                <button onClick={() => setIsEditModalOpen(false)} className={`absolute top-4 right-4 p-2 rounded-full font-bold text-xl ${isDarkMode ? 'bg-slate-800 text-gray-400 hover:text-white' : 'bg-gray-100 text-gray-600 hover:text-red-500'}`}>✖</button>
+                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">✏️ සිසුවා යාවත්කාලීන කිරීම</h2>
+
+                <form onSubmit={handleEditSubmit} className="space-y-4">
+                  <div>
+                    <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>සිසුවාගේ නම</label>
+                    <input type="text" required value={editStudentData.name} onChange={(e) => setEditStudentData({...editStudentData, name: e.target.value})} className={`w-full px-4 py-3 rounded-xl border outline-none transition ${inputBg}`}/>
+                  </div>
+                  <div>
+                    <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>WhatsApp අංකය</label>
+                    <input type="text" required value={editStudentData.email} onChange={(e) => setEditStudentData({...editStudentData, email: e.target.value})} className={`w-full px-4 py-3 rounded-xl border outline-none transition ${inputBg}`} />
+                  </div>
+                  <div>
+                    <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>නව මුරපදය (වෙනස් නොකරන්නේ නම් හිස්ව තබන්න)</label>
+                    <input type="text" value={editStudentData.password} onChange={(e) => setEditStudentData({...editStudentData, password: e.target.value})} className={`w-full px-4 py-3 rounded-xl border outline-none transition ${inputBg}`} placeholder="*********"/>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>A/L වර්ෂය</label>
+                      <select value={editStudentData.alYear} onChange={(e) => setEditStudentData({...editStudentData, alYear: e.target.value})} className={`w-full px-3 py-3 rounded-xl border outline-none transition ${inputBg}`}>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>මධ්‍යස්ථානය</label>
+                      <input list="center-options" type="text" required value={editStudentData.center} onChange={(e) => setEditStudentData({...editStudentData, center: e.target.value})} className={`w-full px-3 py-3 rounded-xl border outline-none transition ${inputBg}`} />
+                    </div>
+                  </div>
+
+                  <div className={`p-4 rounded-xl border ${isDarkMode ? 'bg-slate-800/50 border-slate-700' : 'bg-blue-50/50 border-blue-100'}`}>
+                    <label className={`block text-xs font-bold mb-3 ${isDarkMode ? 'text-blue-400' : 'text-blue-800'}`}>පන්ති වර්ගය:</label>
+                    <div className="flex flex-col gap-3">
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" checked={editStudentData.isTheory} onChange={(e) => setEditStudentData({...editStudentData, isTheory: e.target.checked})} className="w-5 h-5 accent-blue-600 rounded" />
+                        <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-700'}`}>Theory</span>
+                      </label>
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" checked={editStudentData.isRevision} onChange={(e) => setEditStudentData({...editStudentData, isRevision: e.target.checked})} className="w-5 h-5 accent-blue-600 rounded" />
+                        <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-700'}`}>Revision</span>
+                      </label>
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" checked={editStudentData.isPaper} onChange={(e) => setEditStudentData({...editStudentData, isPaper: e.target.checked})} className="w-5 h-5 accent-blue-600 rounded" />
+                        <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-700'}`}>Paper Class</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <button type="submit" disabled={loading} className={`w-full text-white font-bold rounded-xl px-4 py-4 shadow-md transition mt-4 ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}`}>
+                    {loading ? 'රැඳී සිටින්න...' : 'යාවත්කාලීන කරන්න'}
+                  </button>
+                </form>
+
+              </div>
+            </div>
+          )}
+
           {/* --- Student Profile Modal --- */}
-          {selectedStudent && (
+          {selectedStudent && !isEditModalOpen && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity animate-fade-in">
               <div className={`relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 md:p-8 rounded-3xl shadow-2xl ${isDarkMode ? 'bg-slate-900 border border-slate-700 text-white' : 'bg-white text-gray-900'}`}>
                 

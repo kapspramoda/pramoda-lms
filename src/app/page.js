@@ -66,7 +66,7 @@ export default function HomePage() {
       }
       if (phone === "chemeditor" && password === "chem@998844") {
         localStorage.setItem("isAdminLoggedIn", "true");
-        localStorage.setItem("adminRole", "Editor");
+        localStorage.setItem("adminRole", "");
         router.push("/admin");
         return; 
       }
