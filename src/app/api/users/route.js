@@ -111,3 +111,34 @@ export async function DELETE(req) {
     return NextResponse.json({ message: 'Error deleting' }, { status: 500 });
   }
 }
+
+// --- ළමයෙකුගේ දත්ත යාවත්කාලීන කිරීම (Edit Student) ---
+export async function PUT(request) {
+  try {
+    await connectToDatabase(); 
+
+    const body = await request.json();
+    const { id, name, email, password, alYear, center, classTypes } = body;
+
+    // Update කළ යුතු දත්ත
+    const updateData = { name, email, alYear, center, classTypes };
+    
+    // අලුත් පාස්වර්ඩ් එකක් දීලා තියෙනවා නම් පමණක් එය Update කිරීම
+    if (password) {
+       updateData.password = password; 
+    }
+
+    // Database එකේ දත්ත වෙනස් කිරීම
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+    if (!updatedUser) {
+      return NextResponse.json({ message: "සිසුවා සොයාගැනීමට නොහැක." }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "සිසුවා සාර්ථකව යාවත්කාලීන විය." }, { status: 200 });
+
+  } catch (error) {
+    console.error("Update Error:", error);
+    return NextResponse.json({ message: "දත්ත යාවත්කාලීන කිරීමේදී දෝෂයක් මතු විය." }, { status: 500 });
+  }
+}

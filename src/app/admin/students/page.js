@@ -190,7 +190,6 @@ export default function AdminStudentsPage() {
 
         setMsg({ type: 'success', text: `සාර්ථකයි: ${successCount} | දැනටමත් ඇත/අසාර්ථකයි: ${errorCount}` });
         setBulkFile(null); // File input එක clear කිරීම
-        // Settings clear කිරීම අවශ්‍ය නම් පමණක් මෙහි හැදීමට පුළුවන (දැනට center/year වෙනස් වෙන්නේ නෑ)
         setBulkSettings({ ...bulkSettings, password: '' });
         
         fetchStudents();
@@ -250,13 +249,20 @@ export default function AdminStudentsPage() {
         body: JSON.stringify(payload)
       });
 
+      // 🔴 Frontend එකේ Error Handle කිරීම
       if (res.ok) {
         alert('සිසුවාගේ දත්ත යාවත්කාලීන විය! ✅');
         setIsEditModalOpen(false);
         fetchStudents();
       } else {
-        const data = await res.json();
-        throw new Error(data.message || 'දෝෂයක් මතු විය.');
+        let errorMsg = 'දෝෂයක් මතු විය.';
+        try {
+          const data = await res.json();
+          errorMsg = data.message || errorMsg;
+        } catch (e) {
+          errorMsg = `Server Error: Backend API (PUT route) එක සම්බන්ධ වීමේ ගැටලුවක්.`;
+        }
+        throw new Error(errorMsg);
       }
     } catch (error) {
       alert(error.message);
@@ -384,7 +390,7 @@ export default function AdminStudentsPage() {
                     Single Add
                   </button>
                   <button onClick={() => setAddMode('bulk')} className={`flex-1 py-2 rounded-lg text-sm font-bold transition ${addMode === 'bulk' ? 'bg-white text-blue-600 shadow-sm' : (isDarkMode ? 'text-slate-400 hover:text-white' : 'text-gray-500 hover:text-gray-800')}`}>
-                    Excel Bulk Upload
+                    Excel Bulk
                   </button>
                 </div>
 
@@ -448,7 +454,7 @@ export default function AdminStudentsPage() {
                   </form>
                 )}
 
-                {/* --- 🔴 Excel Bulk Add Form --- */}
+                {/* --- Excel Bulk Add Form --- */}
                 {addMode === 'bulk' && (
                   <form onSubmit={handleExcelBulkSubmit} className="space-y-4 animate-fade-in">
                     <div className={`p-3 rounded-lg border text-xs leading-relaxed mb-4 ${isDarkMode ? 'bg-blue-900/20 border-blue-800 text-blue-300' : 'bg-blue-50 border-blue-200 text-blue-800'}`}>
@@ -685,5 +691,4 @@ export default function AdminStudentsPage() {
       </main>
     </div>
   );
-  
 }
