@@ -55,3 +55,31 @@ export async function DELETE(req) { // Erase සඳහා
     return NextResponse.json({ message: 'සාර්ථකව මකා දැමුවා.' });
   } catch (error) { return NextResponse.json({ message: 'දෝෂයකි.' }, { status: 500 }); }
 }
+
+// --- නිබන්ධනයක් යාවත්කාලීන කිරීම (Edit Tute) ---
+export async function PUT(request) {
+  try {
+    const body = await request.json();
+    const { id, title, pdfUrl, category, alYear } = body;
+
+    // මෙහි Tute model එක ලබාගැනීම (ඔයාගේ ෆයිල් එකේ උඩින් තියෙන විදිහට මේක වැඩ කරයි)
+    const mongoose = require('mongoose');
+    const Tute = mongoose.models.Tute || mongoose.model('Tute');
+
+    const updatedTute = await Tute.findByIdAndUpdate(
+      id, 
+      { title, pdfUrl, category, alYear }, 
+      { new: true }
+    );
+
+    if (!updatedTute) {
+      return NextResponse.json({ message: "නිබන්ධනය සොයාගැනීමට නොහැක." }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "නිබන්ධනය සාර්ථකව යාවත්කාලීන විය." }, { status: 200 });
+
+  } catch (error) {
+    console.error("Tute Update Error:", error);
+    return NextResponse.json({ message: "දෝෂයක් මතු විය." }, { status: 500 });
+  }
+}

@@ -105,7 +105,7 @@ export default function AdminTutesPage() {
     setIsEditModalOpen(true);
   };
 
-  const handleEditSubmit = async (e) => {
+ const handleEditSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -121,8 +121,14 @@ export default function AdminTutesPage() {
         setIsEditModalOpen(false);
         fetchTutes();
       } else {
-        const data = await res.json();
-        throw new Error(data.message || 'දෝෂයක් මතු විය.');
+        let errorMsg = 'දෝෂයක් මතු විය.';
+        try {
+          const data = await res.json();
+          errorMsg = data.message || errorMsg;
+        } catch (e) {
+          errorMsg = `Server Error: Backend API (PUT route) එක සම්බන්ධ වීමේ ගැටලුවක්.`;
+        }
+        throw new Error(errorMsg);
       }
     } catch (error) {
       alert(error.message);
@@ -130,7 +136,7 @@ export default function AdminTutesPage() {
       setLoading(false);
     }
   };
-
+  
   const bgMain = isDarkMode ? "bg-slate-950 text-slate-100" : "bg-gray-100 text-gray-800";
   const bgCard = isDarkMode ? "bg-slate-900 border border-slate-800 shadow-none" : "bg-white border-transparent shadow-lg";
   const textMuted = isDarkMode ? "text-slate-400" : "text-gray-500";
