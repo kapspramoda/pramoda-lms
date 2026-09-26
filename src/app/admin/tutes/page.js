@@ -8,10 +8,15 @@ export default function AdminTutesPage() {
   const [isAuthorized, setIsAuthorized] = useState(false); 
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const [formData, setFormData] = useState({ title: '', pdfUrl: '', category: 'Theory', alYear: '2026' });
+  // Default year changed to 2027
+  const [formData, setFormData] = useState({ title: '', pdfUrl: '', category: 'Theory', alYear: '2027' });
   const [tutes, setTutes] = useState([]);
   const [msg, setMsg] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
+
+  // Edit Modal States
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editTuteData, setEditTuteData] = useState(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -57,7 +62,7 @@ export default function AdminTutesPage() {
 
       if (response.ok) {
         setMsg({ type: 'success', text: 'නිබන්ධනය සාර්ථකව එක් කළා! ✅' });
-        setFormData({ title: '', pdfUrl: '', category: 'Theory', alYear: '2026' });
+        setFormData({ title: '', pdfUrl: '', category: 'Theory', alYear: '2027' });
         fetchTutes();
       } else { throw new Error('අසාර්ථකයි.'); }
     } catch (error) {
@@ -85,6 +90,44 @@ export default function AdminTutesPage() {
         await fetch('/api/tutes', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
         fetchTutes();
       } catch (error) { console.error(error); }
+    }
+  };
+
+  // --- Edit Functionality ---
+  const openEditModal = (tute) => {
+    setEditTuteData({
+      id: tute._id,
+      title: tute.title,
+      pdfUrl: tute.pdfUrl,
+      category: tute.category || 'Theory',
+      alYear: tute.alYear || '2027'
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/tutes', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editTuteData)
+      });
+
+      if (res.ok) {
+        alert('නිබන්ධනය සාර්ථකව යාවත්කාලීන විය! ✅');
+        setIsEditModalOpen(false);
+        fetchTutes();
+      } else {
+        const data = await res.json();
+        throw new Error(data.message || 'දෝෂයක් මතු විය.');
+      }
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -156,7 +199,6 @@ export default function AdminTutesPage() {
                   <label className={`block text-sm font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>A/L Year</label>
                   <select value={formData.alYear} onChange={(e) => setFormData({...formData, alYear: e.target.value})} className={`w-full px-4 py-3 rounded-xl border outline-none transition ${inputBg}`}>
                     <option value="All">සියලුම සිසුන්</option>
-                    <option value="2026">2026</option>
                     <option value="2027">2027</option>
                     <option value="2028">2028</option>
                   </select>
@@ -187,11 +229,16 @@ export default function AdminTutesPage() {
                         </div>
                         <h3 className={`font-bold text-base md:text-lg truncate ${tute.isVisible === false ? (isDarkMode ? 'text-slate-500 line-through' : 'text-gray-500 line-through') : (isDarkMode ? 'text-slate-200' : 'text-gray-800')}`}>{tute.title}</h3>
                       </div>
-                      <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <button onClick={() => toggleVisibility(tute._id, tute.isVisible !== false)} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl font-bold text-sm transition-all transform hover:scale-105 shadow-sm ${tute.isVisible === false ? (isDarkMode ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300') : (isDarkMode ? 'bg-yellow-900/40 text-yellow-500 hover:bg-yellow-900/60 border border-yellow-900' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200')}`}>
+                      <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                        <button onClick={() => openEditModal(tute)} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl font-bold text-sm transition-all shadow-sm ${isDarkMode ? 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 border border-blue-900/50' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}>
+                          ✏️ Edit
+                        </button>
+                        <button onClick={() => toggleVisibility(tute._id, tute.isVisible !== false)} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl font-bold text-sm transition-all shadow-sm ${tute.isVisible === false ? (isDarkMode ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300') : (isDarkMode ? 'bg-yellow-900/40 text-yellow-500 hover:bg-yellow-900/60 border border-yellow-900' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200')}`}>
                           {tute.isVisible === false ? '👁️ Show' : '🚫 Hide'}
                         </button>
-                        <button onClick={() => deleteTute(tute._id)} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl font-bold text-sm transition-all transform hover:scale-105 shadow-sm ${isDarkMode ? 'bg-red-900/30 text-red-500 hover:bg-red-900/50 border border-red-900/50' : 'bg-red-100 text-red-600 hover:bg-red-200'}`}>🗑️ Erase</button>
+                        <button onClick={() => deleteTute(tute._id)} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl font-bold text-sm transition-all shadow-sm ${isDarkMode ? 'bg-red-900/30 text-red-500 hover:bg-red-900/50 border border-red-900/50' : 'bg-red-100 text-red-600 hover:bg-red-200'}`}>
+                          🗑️ Erase
+                        </button>
                       </div>
                     </div>
                   ))
@@ -202,6 +249,51 @@ export default function AdminTutesPage() {
 
         </div>
       </main>
+
+      {/* Edit Tute Modal */}
+      {isEditModalOpen && editTuteData && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity">
+          <div className={`relative w-full max-w-lg overflow-y-auto p-6 md:p-8 rounded-3xl shadow-2xl ${isDarkMode ? 'bg-slate-900 border border-slate-700 text-white' : 'bg-white text-gray-900'}`}>
+            <button onClick={() => setIsEditModalOpen(false)} className={`absolute top-4 right-4 p-2 rounded-full font-bold text-xl ${isDarkMode ? 'bg-slate-800 text-gray-400 hover:text-white' : 'bg-gray-100 text-gray-600 hover:text-red-500'}`}>✖</button>
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">✏️ නිබන්ධනය යාවත්කාලීන කිරීම</h2>
+
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <div>
+                <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>මාතෘකාව</label>
+                <input type="text" required value={editTuteData.title} onChange={(e) => setEditTuteData({...editTuteData, title: e.target.value})} className={`w-full px-4 py-3 rounded-xl border outline-none transition ${inputBg}`}/>
+              </div>
+              <div>
+                <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>PDF Link (Drive)</label>
+                <input type="url" required value={editTuteData.pdfUrl} onChange={(e) => setEditTuteData({...editTuteData, pdfUrl: e.target.value})} className={`w-full px-4 py-3 rounded-xl border outline-none transition ${inputBg}`} />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>වර්ගය (Category)</label>
+                  <select value={editTuteData.category} onChange={(e) => setEditTuteData({...editTuteData, category: e.target.value})} className={`w-full px-3 py-3 rounded-xl border outline-none transition ${inputBg}`}>
+                    <option value="Theory">සිද්ධාන්ත</option>
+                    <option value="Revision">පුනරීක්ෂණ</option>
+                    <option value="Marking">Marking Scheme</option>
+                  </select>
+                </div>
+                <div>
+                  <label className={`block text-xs font-bold mb-1 ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>A/L වර්ෂය</label>
+                  <select value={editTuteData.alYear} onChange={(e) => setEditTuteData({...editTuteData, alYear: e.target.value})} className={`w-full px-3 py-3 rounded-xl border outline-none transition ${inputBg}`}>
+                    <option value="All">සියලුම සිසුන්</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" disabled={loading} className={`w-full text-white font-bold rounded-xl px-4 py-4 shadow-md transition mt-4 ${loading ? 'bg-green-400' : 'bg-green-600 hover:bg-green-700'}`}>
+                {loading ? 'රැඳී සිටින්න...' : 'යාවත්කාලීන කරන්න'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
