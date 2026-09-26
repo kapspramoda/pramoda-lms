@@ -169,7 +169,7 @@ export default function oardPage() {
           
           {/* 🔴 Marking Schemes ලින්ක් එක අයින් කර ඇත (දැන් එය Tutes/Videos යටතටම එන බැවින්) */}
 
-          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/oard/marks'); }} className="flex items-center space-x-3 hover:bg-blue-800/80 text-blue-200 hover:text-white px-4 py-3 rounded-xl transition">
+          <a href="#" onClick={(e) => { e.preventDefault(); router.push('/dashboard/marks'); }} className="flex items-center space-x-3 hover:bg-blue-800/80 text-blue-200 hover:text-white px-4 py-3 rounded-xl transition">
             <span className="text-xl">📊</span><span className="font-medium">ප්‍රගති වාර්තාව</span>
           </a>
           
