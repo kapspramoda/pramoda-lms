@@ -13,7 +13,7 @@ export default function StudentMarksPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userName, setUserName] = useState('');
   const [avatar, setAvatar] = useState(null);
-  const [userClasses, setUserClasses] = useState([]); // 🔴 අලුත්: ළමයාගේ පන්ති වර්ග
+  const [userClasses, setUserClasses] = useState([]); 
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user'); 
@@ -30,7 +30,6 @@ export default function StudentMarksPage() {
       const storedAvatar = localStorage.getItem('userAvatar');
       if (storedAvatar) setAvatar(storedAvatar);
 
-      // 🔴 ළමයාගේ පන්ති වර්ග ලබාගැනීම
       const classes = userObj.classTypes || ['Theory'];
       setUserClasses(classes);
 
@@ -194,12 +193,14 @@ export default function StudentMarksPage() {
                   </h2>
                 </div>
                 <div className="overflow-x-auto p-4 custom-scrollbar">
-                  <table className="w-full text-left border-collapse min-w-[600px]">
+                  <table className="w-full text-left border-collapse min-w-[650px]">
                     <thead>
                       <tr className="bg-slate-100 text-slate-600 text-sm uppercase tracking-wider">
                         <th className="p-4 rounded-tl-xl w-12 text-center">#</th>
                         <th className="p-4">ප්‍රශ්න පත්‍රය</th>
                         <th className="p-4 text-center">මගේ ලකුණු</th>
+                        {/* 🔴 අලුත්: ස්ථානය තීරුව */}
+                        <th className="p-4 text-center text-blue-600">ස්ථානය (Rank)</th>
                         <th className="p-4 text-center text-green-700">පන්තියේ වැඩිම ලකුණ</th>
                         <th className="p-4 rounded-tr-xl text-center">පරතරය (Gap)</th>
                       </tr>
@@ -215,6 +216,13 @@ export default function StudentMarksPage() {
                               <span className={`text-xl font-black ${mark.score >= 75 ? 'text-blue-600' : mark.score >= 50 ? 'text-amber-500' : 'text-red-500'}`}>
                                 {mark.score}%
                               </span>
+                            </td>
+                            {/* 🔴 අලුත්: Rank එක පෙන්වීම */}
+                            <td className="p-4 text-center font-bold text-lg text-blue-600">
+                              {mark.rank === 1 ? <span title="පළමු ස්ථානය">🥇 1</span> : 
+                               mark.rank === 2 ? <span title="දෙවන ස්ථානය">🥈 2</span> : 
+                               mark.rank === 3 ? <span title="තෙවන ස්ථානය">🥉 3</span> : 
+                               mark.rank}
                             </td>
                             <td className="p-4 text-center font-black text-lg text-green-600">
                               {mark.highestScore}%
